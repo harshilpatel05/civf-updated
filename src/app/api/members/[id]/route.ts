@@ -3,7 +3,7 @@ import { ObjectId } from 'mongodb';
 import { getDbAndBucket } from '@/utils/mongodb';
 
 export async function DELETE(req: NextRequest) {
-  const { db, bucket } = await getDbAndBucket();
+  const { db, bucket } = await getDbAndBucket('memberImages');
 
   const id = req.nextUrl.pathname.split('/').pop();
 
