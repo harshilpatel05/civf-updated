@@ -33,6 +33,7 @@ export default function ClientTestimonial() {
         setTestimonials(data);
         setLoading(false);
       } catch (err) {
+        console.error('Error fetching testimonials:', err);
         setError('Could not load testimonials');
         setLoading(false);
       }

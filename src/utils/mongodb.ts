@@ -1,17 +1,15 @@
-// utils/mongodb.ts
 import { MongoClient, Db, GridFSBucket } from 'mongodb';
 
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017';
 const DB_NAME = 'civf2';
 
 declare global {
-  // use `let` instead of `var` for global augmentation
-  // eslint-disable-next-line no-var
-  let _mongoClientPromise: Promise<MongoClient> | undefined;
+  // Global variable for MongoDB client reuse in dev
+  var _mongoClientPromise: Promise<MongoClient> | undefined;
 }
 
-// Prevents TypeScript errors on global reuse
-let globalWithMongo = global as typeof globalThis & {
+// Use const instead of let, as it's not reassigned
+const globalWithMongo = global as typeof globalThis & {
   _mongoClientPromise?: Promise<MongoClient>;
 };
 

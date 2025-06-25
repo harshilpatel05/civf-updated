@@ -1,10 +1,12 @@
-"use client";
-import { Dialog, Transition } from "@headlessui/react";
-import { Fragment, useRef, useState } from "react";
-import { toast } from "sonner";
+'use client';
+import { Dialog, Transition } from '@headlessui/react';
+import { Fragment, useRef, useState } from 'react';
+import { toast } from 'sonner';
 
 const AccFrm = () => {
-  const [id, setId] = useState("");
+  const [id, setId] = useState('');
+  const [open, setOpen] = useState(false);
+  const cancelButtonRef = useRef(null);
 
   const validator = (phone: string, equity: string) => {
     if (phone.length !== 10) return false;
@@ -19,39 +21,39 @@ const AccFrm = () => {
 
       if (
         !validator(
-          formData.get("phone") as string,
-          formData.get("equityStack") as string
+          formData.get('phone') as string,
+          formData.get('equityStack') as string
         )
       ) {
-        alert("Invalid Phone Number or Equity Stack");
+        alert('Invalid Phone Number or Equity Stack');
         return;
       }
 
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/AccForm`, {
-        method: "POST",
+        method: 'POST',
         body: formData,
       });
+
       if (!res.ok) {
         if (res.status === 409) {
-          alert("Duplicate Entry With Same Email");
+          alert('Duplicate Entry With Same Email');
           return;
         } else {
-          alert("Error in Submission");
+          alert('Error in Submission');
           return;
         }
       }
+
       const { data: id } = await res.json();
       setId(id);
       setOpen(true);
-      (document.getElementById("frm") as HTMLFormElement).reset();
-    } catch (e: any) {
-      console.error(e);
-      toast.error(e.message);
+      (document.getElementById('frm') as HTMLFormElement).reset();
+    } catch (e) {
+      const error = e instanceof Error ? e : new Error('Unknown error');
+      console.error(error);
+      toast.error(error.message);
     }
   };
-
-  const [open, setOpen] = useState(false);
-  const cancelButtonRef = useRef(null);
 
   return (
     <section className="bg-yellow-500 py-10">
@@ -74,55 +76,49 @@ const AccFrm = () => {
                 Founders&apos; Details
               </h2>
 
-              {/* FORM FIELDS OMITTED FOR BREVITY — KEEP YOUR ORIGINAL HERE */}
+              {/* Include your form fields here as before */}
 
               <h2 className="text-lg font-medium border-b border-gray-600 mt-5 col-span-2">
                 Pitch Desk
               </h2>
               <div className="col-span-2">
-                <label
-                  htmlFor="pitchDesk"
-                  className="block my-2 text-sm font-medium "
-                >
-                  Upload Your Pitch Desk
-                  <span className="text-red-500">*</span>
+                <label htmlFor="pitchDesk" className="block my-2 text-sm font-medium">
+                  Upload Your Pitch Desk <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="file"
                   name="pitchDesk"
                   id="pitchDesk"
-                  className="border bg-white outline-none sm:text-sm rounded-lg block w-full p-2.5 bg-gray border-color2 placeholder-black focus:ring-rose-800 focus:border-rose-500"
+                  className="border bg-white outline-none sm:text-sm rounded-lg block w-full p-2.5"
                   required
                 />
               </div>
 
               <hr className="border-gray-600 mt-5 col-span-2" />
-
               <p>
                 I Accept CIVF&apos;s Application Terms &amp; Conditions And The Company&apos;s Privacy Policy
               </p>
               <p className="text-sm">
-                By checking this box I accept the CIVF&apos;s Accelerator programme&apos;s Application Terms &amp; Conditions and I give my consent to CIVF to process my personal data in accordance with the Company&apos;s Privacy Policy. Wherever I have provided third parties&apos; personal data, the data subjects have consented to the provision of this personal data and the processing in accordance with the above mentioned Privacy Policy.
+                By checking this box I accept the CIVF&apos;s Accelerator programme&apos;s Application Terms &amp;
+                Conditions and I give my consent to CIVF to process my personal data in accordance with the
+                Company&apos;s Privacy Policy.
               </p>
 
               <div className="flex items-start">
-                <div className="flex items-center h-5">
-                  <input
-                    id="terms2"
-                    aria-describedby="terms2"
-                    type="checkbox"
-                    className="w-4 h-4 border outline-none rounded focus:ring-3 bg-gray border-color2 focus:ring-rose-600 ring-offset-gray-800"
-                    required
-                  />
-                </div>
-                <div className="ml-3 text-sm">
-                  <label htmlFor="terms2">I Accept</label>
-                </div>
+                <input
+                  id="terms2"
+                  type="checkbox"
+                  className="w-4 h-4 border rounded focus:ring-3"
+                  required
+                />
+                <label htmlFor="terms2" className="ml-3 text-sm">
+                  I Accept
+                </label>
               </div>
 
               <button
                 type="submit"
-                className="disabled:bg-rose-500 outline-none disabled:cursor-not-allowed w-ful text-white focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center bg-rose-600 hover:bg-rose-700 focus:ring-rose-800"
+                className="w-full bg-rose-600 text-white px-5 py-2.5 rounded hover:bg-rose-700"
               >
                 Create an account
               </button>
@@ -133,12 +129,7 @@ const AccFrm = () => {
 
       {/* Modal */}
       <Transition.Root show={open} as={Fragment}>
-        <Dialog
-          as="div"
-          className="relative z-30"
-          initialFocus={cancelButtonRef}
-          onClose={setOpen}
-        >
+        <Dialog as="div" className="relative z-30" initialFocus={cancelButtonRef} onClose={setOpen}>
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -172,14 +163,14 @@ const AccFrm = () => {
                         >
                           Your application is submitted successfully
                         </Dialog.Title>
-                        <div className="mt-2">Your application id is: {id}</div>
+                        <div className="mt-2">Your application ID is: {id}</div>
                       </div>
                     </div>
                   </div>
                   <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                     <button
                       type="button"
-                      className="inline-flex w-full justify-center rounded-md border border-transparent bg-rose-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
+                      className="inline-flex w-full justify-center rounded-md bg-rose-600 px-4 py-2 text-white hover:bg-rose-700 sm:ml-3 sm:w-auto"
                       onClick={() => setOpen(false)}
                     >
                       Done
