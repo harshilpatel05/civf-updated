@@ -15,7 +15,7 @@ export async function GET(req, { params }) {
   const client = await MongoClient.connect(uri);
   try {
     const db = client.db(dbName);
-    const bucket = new GridFSBucket(db, { bucketName: 'videos' });
+    const bucket = new GridFSBucket(db, { bucketName: 'testimonials' });
     const files = await bucket.find({ filename }).toArray();
     if (!files || files.length === 0) {
       return new NextResponse('File not found', { status: 404 });
