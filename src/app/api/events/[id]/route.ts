@@ -1,18 +1,18 @@
 import { ObjectId } from 'mongodb';
 import { getDbAndBucket } from '@/utils/mongodb';
+import { NextRequest } from 'next/server';
 
-export async function DELETE(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
-  const { db, bucket } = await getDbAndBucket('events'); 
-  const id = params.id;
+export async function DELETE(req: NextRequest) {
+  const url = new URL(req.url);
+  const id = url.pathname.split('/').pop(); // gets [id] from /api/events/[id]
 
-  if (!ObjectId.isValid(id)) {
+  if (!id || !ObjectId.isValid(id)) {
     return new Response(JSON.stringify({ error: 'Invalid event ID' }), {
       status: 400,
     });
   }
+
+  const { db, bucket } = await getDbAndBucket('events');
 
   try {
     const event = await db.collection('events').findOne({ _id: new ObjectId(id) });
@@ -23,7 +23,6 @@ export async function DELETE(
       });
     }
 
-    // Delete the image from GridFS
     if (event.imageId) {
       try {
         await bucket.delete(new ObjectId(event.imageId));
@@ -32,7 +31,6 @@ export async function DELETE(
       }
     }
 
-    // Delete the event document
     await db.collection('events').deleteOne({ _id: new ObjectId(id) });
 
     return new Response(JSON.stringify({ message: 'Event deleted' }), { status: 200 });
