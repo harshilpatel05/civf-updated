@@ -53,64 +53,66 @@ export default function ClientNews() {
 
   return (
     <>
-      <div className="bg-gradient-to-tr from-rose-900 from-10% pb-8 to-pink-600 relative">
+      <div className="bg-blue-900 pb-8 relative">
         <div className="w-full text-center py-4">
           <h1 className="text-3xl lg:text-5xl font-extrabold text-center text-white">
             News & Highlights
           </h1>
         </div>
 
-        <button
-          onClick={() => scroll('left')}
-          className="absolute left-5 top-1/2 transform -translate-y-1/2 bg-rose-900 px-3 py-2 rounded-l z-10"
-        >
-          <i className="fas fa-chevron-left"></i>
-        </button>
-        <button
-          onClick={() => scroll('right')}
-          className="absolute right-5 top-1/2 transform -translate-y-1/2 bg-rose-900 px-3 py-2 rounded-r z-10"
-        >
-          <i className="fas fa-chevron-right"></i>
-        </button>
+        <div className="flex items-center justify-center w-full relative">
+          <button
+            onClick={() => scroll('left')}
+            className="bg-white text-blue-900 text-3xl px-6 py-4 rounded-full z-10 shadow-lg mx-2"
+          >
+            ←
+          </button>
+          <div
+            ref={scrollRef}
+            className="flex flex-row space-x-1 px-4 pb-4 overflow-x-auto scroll-smooth"
+            style={{ maxWidth: '90vw' }}
+          >
+            {newsItems.map((newsItem) => (
+              <div
+                key={newsItem._id}
+                className="bg-white shadow-xl w-120 h-130 m-2 p-4 rounded border border-gray-200 flex flex-col justify-between"
+              >
+                <div className="flex justify-center m-2">
+                  <div className="w-100 h-100 relative flex justify-center items-center overflow-hidden">
+                    <Image
+                      src={`/api/images/${newsItem.imageId}?bucket=news`}
+                      alt="News"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = 'https://via.placeholder.com/300?text=Image+Not+Found';
+                      }}
+                      fill
+                      className="object-contain w-full h-full"
+                    />
+                  </div>
+                </div>
 
-        <div
-          ref={scrollRef}
-          className="flex flex-row space-x-1 mx-10 px-4 pb-4 overflow-x-auto scroll-smooth"
-        >
-          {newsItems.map((newsItem) => (
-            <div
-              key={newsItem._id}
-              className="bg-white shadow-xl w-80 h-120 m-2 p-4 rounded border border-gray-200 flex flex-col justify-between"
-            >
-              <div className="flex justify-center m-2">
-                <div className="w-60 h-60 relative flex justify-center items-center overflow-hidden">
-                  <Image
-                    src={`/api/images/${newsItem.imageId}?bucket=news`}
-                    alt="News"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.src = 'https://via.placeholder.com/300?text=Image+Not+Found';
-                    }}
-                    fill
-                    className="object-contain"
-                  />
+                <div className="flex-grow flex flex-col justify-between">
+                  <h2 className="text-sm text-black text-center font-semibold mb-2">
+                  </h2>
+                  <div className="flex justify-center mt-auto">
+                    <button
+                      onClick={() => setReadMoreId(newsItem._id)}
+                      className="bg-rose-400 text-sm text-white py-2 px-5 rounded-lg hover:bg-rose-600 transition-all"
+                    >
+                      Read More
+                    </button>
+                  </div>
                 </div>
               </div>
-
-              <div className="flex-grow flex flex-col justify-between">
-                <h2 className="text-sm text-black text-center font-semibold mb-2">
-                </h2>
-                <div className="flex justify-center mt-auto">
-                  <button
-                    onClick={() => setReadMoreId(newsItem._id)}
-                    className="bg-rose-400 text-sm text-white py-2 px-5 rounded-lg hover:bg-rose-600 transition-all"
-                  >
-                    Read More
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
+          <button
+            onClick={() => scroll('right')}
+            className="bg-white text-blue-900 text-3xl px-6 py-4 rounded-full z-10 shadow-lg mx-2"
+          >
+            →
+          </button>
         </div>
       </div>
 

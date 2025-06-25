@@ -39,52 +39,50 @@ export default function ClientEvent() {
           <h1 className="text-3xl lg:text-5xl font-extrabold text-gray-800">Events</h1>
         </div>
 
-        <button
-          onClick={() => scroll('left')}
-          className="absolute left-5 top-1/2 transform -translate-y-1/2 bg-blue-900 px-3 py-2 rounded-l z-10"
-        >
-          <i className="fas fa-chevron-left"></i>
-        </button>
-        <button
-          onClick={() => scroll('right')}
-          className="absolute right-5 top-1/2 transform -translate-y-1/2 bg-blue-900 px-3 py-2 rounded-r z-10"
-        >
-          <i className="fas fa-chevron-right"></i>
-        </button>
-
-        <div
-          ref={scrollRef}
-          className="mx-auto px-10 pb-4 flex overflow-x-auto justify-start scroll-smooth hide-scrollbar"
-          style={{
-            maxWidth: '1200px',
-            gap: '16px',
-          }}
-        >
-          {events.map((event) => (
-            <div
-              key={event._id}
-              className="bg-white min-w-[250px] lg:min-w-[300px] h-auto p-6 rounded border border-gray-200 flex flex-col justify-between"
-            >
-              <div className="flex justify-center mb-4 relative w-60 h-60">
-                <Image
-                  src={event.image ?? '/placeholder.jpg'}
-                  alt={event.title ?? 'Event Image'}
-                  fill
-                  className="object-contain"
-                  sizes="(max-width: 768px) 100vw, 300px"
-                />
-              </div>
-              <h2 className="text-sm text-center font-semibold text-black mb-2">
-                {event.title}
-              </h2>
-              <button
-                onClick={() => setReadMoreId(event._id)}
-                className="bg-orange-400 text-white py-1 px-4 rounded hover:bg-orange-500"
+        <div className="flex items-center justify-center w-full relative">
+          <button
+            onClick={() => scroll('left')}
+            className="bg-blue-900 text-white text-3xl px-6 py-4 rounded-full z-10 shadow-lg mx-2"
+          >
+            ←
+          </button>
+          <div
+            ref={scrollRef}
+            className="mx-auto px-10 pb-4 flex overflow-x-auto justify-start scroll-smooth hide-scrollbar"
+            style={{ maxWidth: '90vw', gap: '16px' }}
+          >
+            {events.map((event) => (
+              <div
+                key={event._id}
+                className="bg-white min-w-[250px] lg:min-w-[300px] h-auto p-6 rounded border border-gray-200 flex flex-col justify-between"
               >
-                Read More
-              </button>
-            </div>
-          ))}
+                <div className="flex justify-center mb-4 relative w-60 h-60">
+                  <Image
+                    src={event.image ?? '/placeholder.jpg'}
+                    alt={event.title ?? 'Event Image'}
+                    fill
+                    className="object-contain"
+                    sizes="(max-width: 768px) 100vw, 300px"
+                  />
+                </div>
+                <h2 className="text-sm text-center font-semibold text-black mb-2">
+                  {event.title}
+                </h2>
+                <button
+                  onClick={() => setReadMoreId(event._id)}
+                  className="bg-orange-400 text-white py-1 px-4 rounded hover:bg-orange-500"
+                >
+                  Read More
+                </button>
+              </div>
+            ))}
+          </div>
+          <button
+            onClick={() => scroll('right')}
+            className="bg-blue-900 text-white text-3xl px-6 py-4 rounded-full z-10 shadow-lg mx-2"
+          >
+            →
+          </button>
         </div>
       </div>
 

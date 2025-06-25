@@ -93,23 +93,25 @@ export default function ClientTestimonial() {
         </div>
 
         {testimonials.length > 1 && (
-          <div className="flex justify-center gap-4 mt-8">
+          <div className="flex items-center justify-center gap-4 mt-8">
             <button
               onClick={() => scroll('left')}
               disabled={currentIndex === 0}
-              className="bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="bg-blue-600 text-white text-3xl px-6 py-4 rounded-full shadow-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-              <i className="fas fa-chevron-left mr-2"></i>Previous
+              ← <span className="text-base align-middle ml-2">Previous</span>
             </button>
-            <span className="flex items-center px-4 text-gray-600">
-              {currentIndex + 1} of {testimonials.length}
-            </span>
+            <div className="flex-1 flex justify-center">
+              <span className="flex items-center px-4 text-gray-600 text-base">
+                {currentIndex + 1} of {testimonials.length}
+              </span>
+            </div>
             <button
               onClick={() => scroll('right')}
               disabled={currentIndex === testimonials.length - 1}
-              className="bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="bg-blue-600 text-white text-3xl px-6 py-4 rounded-full shadow-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-              Next<i className="fas fa-chevron-right ml-2"></i>
+              <span className="text-base align-middle mr-2">Next</span> →
             </button>
           </div>
         )}
