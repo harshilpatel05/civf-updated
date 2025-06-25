@@ -24,15 +24,12 @@ export default function ClientTestimonial() {
   useEffect(() => {
     const fetchTestimonials = async () => {
       try {
-        console.log('Fetching testimonials...');
         const res = await fetch('/api/testimonials');
         if (!res.ok) throw new Error('Failed to fetch');
         const data: Testimonial[] = await res.json();
-        console.log('Testimonials data:', data);
         setTestimonials(data);
         setLoading(false);
-      } catch (err) {
-        console.error('Error fetching testimonials:', err);
+      } catch {
         setError('Could not load testimonials');
         setLoading(false);
       }
@@ -65,36 +62,57 @@ export default function ClientTestimonial() {
   if (error) return <p className="text-center text-red-500 mt-10">{error}</p>;
   if (testimonials.length === 0) return <p className="text-center mt-10">No testimonials found.</p>;
 
-  console.log('Rendering testimonials component. Current index:', currentIndex, 'Total testimonials:', testimonials.length);
   const current = testimonials[currentIndex];
 
   return (
-    <div className="p-8 bg-yellow-100 border-2 border-red-500">
-      <div className="bg-red-500 text-white p-4 text-center text-2xl font-bold">
-        DEBUG: Testimonials Component is Rendering!
-      </div>
-      <h1 className="text-center text-4xl font-bold mb-4">Testimonials</h1>
-      <div className="w-full max-w-2xl mx-auto">
-        <p className="text-center text-gray-500">Video temporarily disabled for debugging</p>
-        <blockquote className="mt-4 text-xl italic text-center">
-          &ldquo;{current.testimonial}&rdquo;
-        </blockquote>
-        <p className="text-center font-bold mt-2">{current.name}</p>
-        <p className="text-center text-gray-600">{current.person}</p>
-      </div>
-      <div className="flex justify-center gap-4 mt-6">
-        <button
-          onClick={() => scroll('left')}
-          className="bg-gray-200 px-4 py-2 rounded hover:bg-gray-300"
-        >
-          ←
-        </button>
-        <button
-          onClick={() => scroll('right')}
-          className="bg-gray-200 px-4 py-2 rounded hover:bg-gray-300"
-        >
-          →
-        </button>
+    <div className="bg-gradient-to-r from-blue-50 to-indigo-100 py-16">
+      <div className="max-w-4xl mx-auto px-4">
+        <h1 className="text-center text-4xl font-bold text-gray-800 mb-12">What Our Community Says</h1>
+        
+        <div className="bg-white rounded-2xl shadow-xl p-8 relative">
+          <blockquote className="text-xl italic text-center text-gray-700 mb-6">
+            &ldquo;{current.testimonial}&rdquo;
+          </blockquote>
+          
+          <div className="text-center">
+            <p className="text-lg font-semibold text-gray-800">{current.name}</p>
+            <p className="text-gray-600">{current.person}</p>
+          </div>
+
+          {current.video?.filename && (
+            <div className="mt-6 text-center">
+              <video 
+                controls 
+                className="mx-auto max-w-full h-auto rounded-lg shadow-md"
+                src={`/api/video/${current.video.filename}`}
+              >
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          )}
+        </div>
+
+        {testimonials.length > 1 && (
+          <div className="flex justify-center gap-4 mt-8">
+            <button
+              onClick={() => scroll('left')}
+              disabled={currentIndex === 0}
+              className="bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              ← Previous
+            </button>
+            <span className="flex items-center px-4 text-gray-600">
+              {currentIndex + 1} of {testimonials.length}
+            </span>
+            <button
+              onClick={() => scroll('right')}
+              disabled={currentIndex === testimonials.length - 1}
+              className="bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              Next →
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

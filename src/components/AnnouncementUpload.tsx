@@ -49,17 +49,17 @@ export default function AnnouncementUpload() {
       return;
     }
 
-    // Validate file sizes
-    const MAX_PDF_SIZE = 100 * 1024 * 1024; // 100MB
-    const MAX_IMAGE_SIZE = 20 * 1024 * 1024; // 20MB
+    // Validate file sizes for deployment compatibility
+    const MAX_PDF_SIZE = 4 * 1024 * 1024; // 4MB for deployment
+    const MAX_IMAGE_SIZE = 2 * 1024 * 1024; // 2MB for deployment
 
     if (image && image.size > MAX_IMAGE_SIZE) {
-      showMessage(`❌ Image file too large. Maximum size is ${MAX_IMAGE_SIZE / (1024 * 1024)}MB.`, 'error');
+      showMessage(`❌ Image file too large. Maximum size is ${MAX_IMAGE_SIZE / (1024 * 1024)}MB for deployment. Please compress your image.`, 'error');
       return;
     }
 
     if (pdfFile && pdfFile.size > MAX_PDF_SIZE) {
-      showMessage(`❌ PDF file too large. Maximum size is ${MAX_PDF_SIZE / (1024 * 1024)}MB.`, 'error');
+      showMessage(`❌ PDF file too large. Maximum size is ${MAX_PDF_SIZE / (1024 * 1024)}MB for deployment. Please compress your PDF or use a smaller file.`, 'error');
       return;
     }
 
@@ -129,6 +129,16 @@ export default function AnnouncementUpload() {
     <div className="max-w-5xl mx-auto mt-10 p-6 text-black bg-white rounded shadow space-y-10">
       <form onSubmit={handleSubmit} className="space-y-4">
         <h2 className="text-2xl font-bold text-center">Upload New Announcement</h2>
+        
+        {/* Deployment Tips */}
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+          <h3 className="text-sm font-semibold text-blue-800 mb-2">📋 Deployment Upload Tips:</h3>
+          <ul className="text-xs text-blue-700 space-y-1">
+            <li>• <strong>PDFs:</strong> Maximum 4MB - Use online PDF compressors if needed</li>
+            <li>• <strong>Images:</strong> Maximum 2MB - Compress images before uploading</li>
+            <li>• <strong>For larger files:</strong> Upload locally first, then deploy</li>
+          </ul>
+        </div>
 
         <input
           type="text"
@@ -149,7 +159,7 @@ export default function AnnouncementUpload() {
             required
           />
           <p className="text-xs text-gray-500 mt-1">
-            Maximum file size: 20MB. Supported formats: JPEG, PNG, GIF, WebP
+            Maximum file size: 2MB for deployment. Supported formats: JPEG, PNG, GIF, WebP
           </p>
           {image && (
             <p className="text-xs text-blue-600">
@@ -168,7 +178,7 @@ export default function AnnouncementUpload() {
             required
           />
           <p className="text-xs text-gray-500 mt-1">
-            Maximum file size: 100MB. Supported format: PDF only
+            Maximum file size: 4MB for deployment. Supported format: PDF only
           </p>
           {pdfFile && (
             <p className="text-xs text-blue-600">

@@ -2,8 +2,9 @@ import { NextResponse } from 'next/server';
 import clientPromise from '@/utils/mongodb';
 import { getDbAndBucket } from '@/utils/mongodb';
 
-const MAX_PDF_SIZE = 100 * 1024 * 1024; // 100MB
-const MAX_IMAGE_SIZE = 20 * 1024 * 1024; // 20MB
+// Reduced limits for serverless deployment compatibility
+const MAX_PDF_SIZE = 4 * 1024 * 1024; // 4MB for serverless compatibility
+const MAX_IMAGE_SIZE = 2 * 1024 * 1024; // 2MB for serverless compatibility
 const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
 const ALLOWED_PDF_TYPES = ['application/pdf'];
 
@@ -31,6 +32,11 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
+    const contentType = req.headers.get('content-type') || '';
+    if (!contentType.includes('multipart/form-data')) {
+      return new NextResponse('Invalid content type', { status: 400 });
+    }
+
     const formData = await req.formData();
     const title = formData.get('title') as string;
     const imageFile = formData.get('image') as File;
@@ -43,7 +49,7 @@ export async function POST(req: Request) {
 
     // Validate image file
     if (imageFile.size > MAX_IMAGE_SIZE) {
-      return new NextResponse(`Image file too large. Maximum size is ${MAX_IMAGE_SIZE / (1024 * 1024)}MB`, { status: 413 });
+      return new NextResponse(`Image file too large. Maximum size is ${MAX_IMAGE_SIZE / (1024 * 1024)}MB for deployment.`, { status: 413 });
     }
 
     if (!ALLOWED_IMAGE_TYPES.includes(imageFile.type)) {
@@ -52,7 +58,7 @@ export async function POST(req: Request) {
 
     // Validate PDF file
     if (pdfFile.size > MAX_PDF_SIZE) {
-      return new NextResponse(`PDF file too large. Maximum size is ${MAX_PDF_SIZE / (1024 * 1024)}MB`, { status: 413 });
+      return new NextResponse(`PDF file too large. Maximum size is ${MAX_PDF_SIZE / (1024 * 1024)}MB for deployment. Consider compressing your PDF.`, { status: 413 });
     }
 
     if (!ALLOWED_PDF_TYPES.includes(pdfFile.type)) {

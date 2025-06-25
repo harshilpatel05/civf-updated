@@ -48,9 +48,9 @@ export default function ClientTestimonialsAdmin() {
 
     // Validate video file if present
     if (video) {
-      const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
+      const MAX_FILE_SIZE = 4 * 1024 * 1024; // 4MB for deployment
       if (video.size > MAX_FILE_SIZE) {
-        showMessage(`❌ Video file too large. Maximum size is ${MAX_FILE_SIZE / (1024 * 1024)}MB.`, "error");
+        showMessage(`❌ Video file too large. Maximum size is ${MAX_FILE_SIZE / (1024 * 1024)}MB for deployment. Please compress your video.`, "error");
         return;
       }
 
@@ -122,6 +122,18 @@ export default function ClientTestimonialsAdmin() {
 
         <div className="flex flex-col justify-center items-center md:flex-row gap-8">
           <form onSubmit={handleSubmit} className="flex-1 space-y-4 max-w-md">
+            <h2 className="text-2xl font-bold text-center">Upload New Testimonial</h2>
+            
+            {/* Deployment Tips */}
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+              <h3 className="text-sm font-semibold text-blue-800 mb-2">📋 Deployment Upload Tips:</h3>
+              <ul className="text-xs text-blue-700 space-y-1">
+                <li>• <strong>Videos:</strong> Maximum 4MB - Compress videos before uploading</li>
+                <li>• <strong>For larger files:</strong> Upload locally first, then deploy</li>
+                <li>• <strong>Compression tools:</strong> Use online video compressors if needed</li>
+              </ul>
+            </div>
+
             <input
               type="text"
               placeholder="Name"
@@ -152,7 +164,7 @@ export default function ClientTestimonialsAdmin() {
               className="w-full p-2 placeholder-black text-black border border-gray-300 rounded"
             />
             <p className="text-xs text-gray-500 mt-1">
-              Maximum file size: 50MB. Supported formats: MP4, WebM, OGG, QuickTime
+              Maximum file size: 4MB for deployment. Supported formats: MP4, WebM, OGG, QuickTime
             </p>
             {video && (
               <p className="text-xs text-blue-600">

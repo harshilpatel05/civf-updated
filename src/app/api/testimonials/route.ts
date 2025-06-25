@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 import clientPromise, { getDbAndBucket } from '@/utils/mongodb';
 
-const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
+// Reduced limits for serverless deployment compatibility
+const MAX_FILE_SIZE = 4 * 1024 * 1024; // 4MB for serverless compatibility
 const ALLOWED_VIDEO_TYPES = ['video/mp4', 'video/webm', 'video/ogg', 'video/quicktime'];
 
 export async function GET() {
@@ -50,7 +51,7 @@ export async function POST(req: Request) {
     if (videoFile && videoFile.size > 0) {
       // Validate file size
       if (videoFile.size > MAX_FILE_SIZE) {
-        return new NextResponse(`File too large. Maximum size is ${MAX_FILE_SIZE / (1024 * 1024)}MB`, { status: 413 });
+        return new NextResponse(`File too large. Maximum size is ${MAX_FILE_SIZE / (1024 * 1024)}MB for deployment. Please compress your video.`, { status: 413 });
       }
 
       // Validate file type
