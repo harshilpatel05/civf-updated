@@ -1,7 +1,8 @@
 import { ObjectId } from 'mongodb';
 import { getDbAndBucket } from '@/utils/mongodb';
+import { Readable } from 'stream';
 
-export const runtime = 'nodejs'; // ensure it's not an edge function
+export const runtime = 'nodejs';
 
 export async function GET(req: Request) {
   const { searchParams, pathname } = new URL(req.url, 'http://localhost');
@@ -20,9 +21,10 @@ export async function GET(req: Request) {
     return new Response('Image not found', { status: 404 });
   }
 
-  const stream = bucket.openDownloadStream(objectId);
+  const nodeStream = bucket.openDownloadStream(objectId);
+  const webStream = Readable.toWeb(nodeStream) as ReadableStream<Uint8Array>;
 
-  return new Response(stream as any, {
+  return new Response(webStream, {
     status: 200,
     headers: {
       'Content-Type': 'image/jpeg',
