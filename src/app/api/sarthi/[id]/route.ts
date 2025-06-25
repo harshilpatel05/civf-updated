@@ -4,10 +4,10 @@ import { getDbAndBucket } from '@/utils/mongodb';
 
 export async function DELETE(
   req: NextRequest,
-  context: { params: Record<string, string> }
+  context: { params: { id: string } }
 ) {
-  const { id } = context.params;
   const { db, bucket } = await getDbAndBucket('memberImages');
+  const id = context.params.id;
 
   if (!ObjectId.isValid(id)) {
     return new Response(JSON.stringify({ error: 'Invalid ID' }), { status: 400 });
