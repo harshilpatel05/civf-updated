@@ -4,7 +4,7 @@ import { NextRequest } from 'next/server';
 
 export async function DELETE(
   req: NextRequest,
-  context: { params: { id: string } } // Correct typing for Next.js App Router
+  context: any // Use 'any' for maximum compatibility with Next.js App Router
 ) {
   const id = context.params.id;
   const { db, bucket } = await getDbAndBucket('memberImages');
