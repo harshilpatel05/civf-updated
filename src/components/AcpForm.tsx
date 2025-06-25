@@ -49,9 +49,10 @@ const AccFrm = () => {
       setId(id);
       setOpen(true);
       (document.getElementById("frm") as HTMLFormElement).reset();
-    } catch (e: any) {
+    } catch (e: unknown) {
       console.error(e);
-      toast.error(e.message);
+      const errorMessage = e instanceof Error ? e.message : 'An unknown error occurred';
+      toast.error(errorMessage);
     }
   };
 
