@@ -84,7 +84,7 @@ export default function ClientTestimonial() {
               <video 
                 controls 
                 className="mx-auto max-w-full h-auto rounded-lg shadow-md"
-                src={`/api/video/${current.video.filename}`}
+                src={`/api/video/${encodeURIComponent(current.video.filename)}`}
               >
                 Your browser does not support the video tag.
               </video>
