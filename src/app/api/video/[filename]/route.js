@@ -1,7 +1,8 @@
 import { MongoClient, GridFSBucket } from 'mongodb';
 import { NextResponse } from 'next/server';
 const uri = process.env.MONGODB_URI;
-const dbName = 'civf2';
+// Use the same DB name as the rest of the app, fallback to 'civf2' if not set
+const dbName = process.env.DB_NAME || 'civf2';
 
 export async function GET(req, { params }) {
   const { filename } = params; // Remove await, params is not a promise
