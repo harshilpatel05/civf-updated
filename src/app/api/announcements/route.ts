@@ -2,6 +2,11 @@ import { NextResponse } from 'next/server';
 import clientPromise from '@/utils/mongodb';
 import { getDbAndBucket } from '@/utils/mongodb';
 
+const MAX_PDF_SIZE = 100 * 1024 * 1024; // 100MB
+const MAX_IMAGE_SIZE = 20 * 1024 * 1024; // 20MB
+const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+const ALLOWED_PDF_TYPES = ['application/pdf'];
+
 export async function GET() {
   try {
     const client = await clientPromise;
@@ -31,49 +36,77 @@ export async function POST(req: Request) {
     const imageFile = formData.get('image') as File;
     const pdfFile = formData.get('pdfFile') as File;
 
+    // Validate required fields
     if (!title || !imageFile || !pdfFile) {
       return new NextResponse('Missing required fields', { status: 400 });
+    }
+
+    // Validate image file
+    if (imageFile.size > MAX_IMAGE_SIZE) {
+      return new NextResponse(`Image file too large. Maximum size is ${MAX_IMAGE_SIZE / (1024 * 1024)}MB`, { status: 413 });
+    }
+
+    if (!ALLOWED_IMAGE_TYPES.includes(imageFile.type)) {
+      return new NextResponse('Invalid image format. Please use JPEG, PNG, GIF, or WebP.', { status: 400 });
+    }
+
+    // Validate PDF file
+    if (pdfFile.size > MAX_PDF_SIZE) {
+      return new NextResponse(`PDF file too large. Maximum size is ${MAX_PDF_SIZE / (1024 * 1024)}MB`, { status: 413 });
+    }
+
+    if (!ALLOWED_PDF_TYPES.includes(pdfFile.type)) {
+      return new NextResponse('Invalid file format. Please upload a PDF file.', { status: 400 });
     }
 
     const client = await clientPromise;
     const db = client.db();
 
-    // Upload image to announcements bucket
-    const { bucket: imageBucket } = await getDbAndBucket('announcements');
-    const imageBuffer = Buffer.from(await imageFile.arrayBuffer());
-    const imageUploadStream = imageBucket.openUploadStream(imageFile.name);
-    imageUploadStream.end(imageBuffer);
-    await new Promise((resolve, reject) => {
-      imageUploadStream.on('finish', resolve);
-      imageUploadStream.on('error', reject);
-    });
+    try {
+      // Upload image to announcements bucket
+      const { bucket: imageBucket } = await getDbAndBucket('announcements');
+      const imageBuffer = Buffer.from(await imageFile.arrayBuffer());
+      const imageUploadStream = imageBucket.openUploadStream(imageFile.name, {
+        contentType: imageFile.type,
+      });
+      imageUploadStream.end(imageBuffer);
+      await new Promise((resolve, reject) => {
+        imageUploadStream.on('finish', resolve);
+        imageUploadStream.on('error', reject);
+      });
 
-    // Upload PDF to announcements bucket
-    const { bucket: pdfBucket } = await getDbAndBucket('announcements');
-    const pdfBuffer = Buffer.from(await pdfFile.arrayBuffer());
-    const pdfUploadStream = pdfBucket.openUploadStream(pdfFile.name);
-    pdfUploadStream.end(pdfBuffer);
-    await new Promise((resolve, reject) => {
-      pdfUploadStream.on('finish', resolve);
-      pdfUploadStream.on('error', reject);
-    });
+      // Upload PDF to announcements bucket
+      const { bucket: pdfBucket } = await getDbAndBucket('announcements');
+      const pdfBuffer = Buffer.from(await pdfFile.arrayBuffer());
+      const pdfUploadStream = pdfBucket.openUploadStream(pdfFile.name, {
+        contentType: pdfFile.type,
+      });
+      pdfUploadStream.end(pdfBuffer);
+      await new Promise((resolve, reject) => {
+        pdfUploadStream.on('finish', resolve);
+        pdfUploadStream.on('error', reject);
+      });
 
-    // Save announcement data
-    const result = await db.collection('announcements').insertOne({
-      title,
-      image: `/api/images/${imageUploadStream.id}?bucket=announcements`,
-      file: {
-        _id: pdfUploadStream.id,
-      },
-      uploadedAt: new Date(),
-    });
+      // Save announcement data
+      const result = await db.collection('announcements').insertOne({
+        title,
+        image: `/api/images/${imageUploadStream.id}?bucket=announcements`,
+        file: {
+          _id: pdfUploadStream.id,
+        },
+        uploadedAt: new Date(),
+      });
 
-    return NextResponse.json({ 
-      message: 'Announcement uploaded successfully',
-      id: String(result.insertedId)
-    });
+      return NextResponse.json({ 
+        message: 'Announcement uploaded successfully',
+        id: String(result.insertedId)
+      });
+    } catch (uploadError) {
+      console.error('Upload error:', uploadError);
+      return new NextResponse('Failed to upload files to storage', { status: 500 });
+    }
   } catch (err) {
-    console.error(err);
+    console.error('Announcement upload error:', err);
     return new NextResponse('Failed to upload announcement', { status: 500 });
   }
 } 

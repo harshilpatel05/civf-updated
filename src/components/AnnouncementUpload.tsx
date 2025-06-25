@@ -49,6 +49,34 @@ export default function AnnouncementUpload() {
       return;
     }
 
+    // Validate file sizes
+    const MAX_PDF_SIZE = 100 * 1024 * 1024; // 100MB
+    const MAX_IMAGE_SIZE = 20 * 1024 * 1024; // 20MB
+
+    if (image && image.size > MAX_IMAGE_SIZE) {
+      showMessage(`❌ Image file too large. Maximum size is ${MAX_IMAGE_SIZE / (1024 * 1024)}MB.`, 'error');
+      return;
+    }
+
+    if (pdfFile && pdfFile.size > MAX_PDF_SIZE) {
+      showMessage(`❌ PDF file too large. Maximum size is ${MAX_PDF_SIZE / (1024 * 1024)}MB.`, 'error');
+      return;
+    }
+
+    // Validate file types
+    const allowedImageTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+    const allowedPdfTypes = ['application/pdf'];
+
+    if (image && !allowedImageTypes.includes(image.type)) {
+      showMessage('❌ Invalid image format. Please use JPEG, PNG, GIF, or WebP.', 'error');
+      return;
+    }
+
+    if (pdfFile && !allowedPdfTypes.includes(pdfFile.type)) {
+      showMessage('❌ Invalid file format. Please upload a PDF file.', 'error');
+      return;
+    }
+
     const formData = new FormData();
     formData.append('title', title);
     formData.append('image', image);
@@ -67,11 +95,12 @@ export default function AnnouncementUpload() {
         setPdfFile(null);
         fetchAnnouncements();
       } else {
-        showMessage('❌ Upload failed. Please try again.', 'error');
+        const errorText = await res.text();
+        showMessage(`❌ Upload failed: ${errorText}`, 'error');
       }
     } catch (err) {
-      console.error(err);
-      showMessage('❌ Upload error.', 'error');
+      console.error('Upload error:', err);
+      showMessage('❌ Network error. Please try again.', 'error');
     }
   };
 
@@ -119,6 +148,14 @@ export default function AnnouncementUpload() {
             onChange={(e) => setImage(e.target.files?.[0] || null)}
             required
           />
+          <p className="text-xs text-gray-500 mt-1">
+            Maximum file size: 20MB. Supported formats: JPEG, PNG, GIF, WebP
+          </p>
+          {image && (
+            <p className="text-xs text-blue-600">
+              Selected: {image.name} ({(image.size / (1024 * 1024)).toFixed(2)}MB)
+            </p>
+          )}
         </div>
 
         <div>
@@ -130,6 +167,14 @@ export default function AnnouncementUpload() {
             onChange={(e) => setPdfFile(e.target.files?.[0] || null)}
             required
           />
+          <p className="text-xs text-gray-500 mt-1">
+            Maximum file size: 100MB. Supported format: PDF only
+          </p>
+          {pdfFile && (
+            <p className="text-xs text-blue-600">
+              Selected: {pdfFile.name} ({(pdfFile.size / (1024 * 1024)).toFixed(2)}MB)
+            </p>
+          )}
         </div>
 
         <button
