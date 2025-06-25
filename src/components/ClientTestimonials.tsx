@@ -1,21 +1,26 @@
 'use client';
-import { useState, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
-import '@fortawesome/fontawesome-free/css/all.min.css';
 
 const ReactPlayer = dynamic(() => import('react-player'), { ssr: false });
+
+type GridFSFile = {
+  filename: string;
+};
 
 type Testimonial = {
   _id: string;
   name: string;
   person: string;
   testimonial: string;
-  video?: {
-    filename: string;
-  } | null;
+  video?: GridFSFile | null;
 };
 
-export default function ClientTestimonials({ testimonials }: { testimonials: Testimonial[] }) {
+type ClientTestimonialProps = {
+  testimonials: Testimonial[];
+};
+
+export default function ClientTestimonial({ testimonials }: ClientTestimonialProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -35,73 +40,34 @@ export default function ClientTestimonials({ testimonials }: { testimonials: Tes
     });
   };
 
+  if (!testimonials.length) return <p className="text-center mt-10">Loading testimonials...</p>;
+
+  const current = testimonials[currentIndex];
+
   return (
-    <div className="relative bg-[url('/backdrop.png')] bg-cover bg-center bg-no-repeat">
-      <div className="absolute inset-0 bg-white/95 z-0"></div>
-      <div className="relative z-10 p-8">
-        <div className="w-full text-center py-4">
-          <h1 className="text-3xl lg:text-5xl font-extrabold text-gray-800">Testimonials</h1>
-        </div>
-        <div className="flex flex-col lg:flex-row items-stretch justify-center gap-6 mt-6 min-h-[400px]">
-          <div className="w-full lg:w-1/2 flex justify-center items-center p-6">
-            <div className="w-full max-w-2xl">
-              {testimonials[currentIndex]?.video?.filename ? (
-                <ReactPlayer
-                  url={`/api/video/${testimonials[currentIndex].video!.filename}`}
-                  controls
-                  playing={true}
-                  muted={true}
-                  width="100%"
-                  height="auto"
-                  config={{
-                    file: {
-                      attributes: {
-                        controlsList: 'nodownload nofullscreen noremoteplayback',
-                        disablePictureInPicture: true,
-                      },
-                    },
-                  }}
-                />
-              ) : (
-                <p className="text-white">No video available</p>
-              )}
-            </div>
-          </div>
-          <div className="w-full lg:w-1/2 relative flex items-center">
-            <button
-              onClick={() => scroll('left')}
-              className="absolute fas fa-arrow-left left-0 top-1/2 -translate-y-1/2 z-20 bg-blue-900 text-white px-3 py-2 rounded-l"
-            />
-            <button
-              onClick={() => scroll('right')}
-              className="absolute fas fa-arrow-right right-0 top-1/2 -translate-y-1/2 z-20 bg-blue-900 text-white px-3 py-2 rounded-r"
-            />
-            <div
-              ref={scrollRef}
-              className="flex flex-nowrap overflow-x-hidden scroll-smooth h-full px-10 w-full"
-            >
-              {testimonials.map((testimonial) => (
-                <div
-                  key={testimonial._id}
-                  className="min-w-full flex flex-col px-10 justify-center items-center h-full"
-                >
-                  <h1 className="text-2xl px-5 text-gray-600 italic text-center mb-2">
-                    &quot;{testimonial.testimonial}&quot;
-                  </h1>
-                  <div className="flex justify-center">
-                    <div className="bg-black w-60 h-1"></div>
-                  </div>
-                  <h2 className="text-xl px-5 text-black text-center mt-2">
-                    {testimonial.name}
-                  </h2>
-                  <h2 className="text-xl italic px-5 text-black/80 text-center mt-2">
-                    - {testimonial.person}
-                  </h2>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+    <div className="p-8">
+      <h1 className="text-center text-4xl font-bold mb-4">Testimonials</h1>
+      <div className="w-full max-w-2xl mx-auto">
+        {current?.video?.filename ? (
+          <ReactPlayer
+            url={`/api/video/${current.video.filename}`}
+            controls
+            playing={false}
+            muted
+            width="100%"
+          />
+        ) : (
+          <p className="text-center text-gray-500">No video available</p>
+        )}
+        <blockquote className="mt-4 text-xl italic text-center">
+          “{current.testimonial}”
+        </blockquote>
+        <p className="text-center font-bold mt-2">{current.name}</p>
+        <p className="text-center text-gray-600">{current.person}</p>
+      </div>
+      <div className="flex justify-center gap-4 mt-6">
+        <button onClick={() => scroll('left')}>←</button>
+        <button onClick={() => scroll('right')}>→</button>
       </div>
     </div>
   );
