@@ -27,9 +27,11 @@ export default function ClientTestimonial() {
   useEffect(() => {
     const fetchTestimonials = async () => {
       try {
+        console.log('Fetching testimonials...');
         const res = await fetch('/api/testimonials');
         if (!res.ok) throw new Error('Failed to fetch');
         const data: Testimonial[] = await res.json();
+        console.log('Testimonials data:', data);
         setTestimonials(data);
         setLoading(false);
       } catch (err) {
@@ -66,25 +68,19 @@ export default function ClientTestimonial() {
   if (error) return <p className="text-center text-red-500 mt-10">{error}</p>;
   if (testimonials.length === 0) return <p className="text-center mt-10">No testimonials found.</p>;
 
+  console.log('Rendering testimonials component. Current index:', currentIndex, 'Total testimonials:', testimonials.length);
   const current = testimonials[currentIndex];
 
   return (
-    <div className="p-8">
+    <div className="p-8 bg-yellow-100 border-2 border-red-500">
+      <div className="bg-red-500 text-white p-4 text-center text-2xl font-bold">
+        DEBUG: Testimonials Component is Rendering!
+      </div>
       <h1 className="text-center text-4xl font-bold mb-4">Testimonials</h1>
       <div className="w-full max-w-2xl mx-auto">
-        {current?.video?.filename ? (
-          <ReactPlayer
-            url={`/api/video/${current.video.filename}`}
-            controls
-            playing={false}
-            muted
-            width="100%"
-          />
-        ) : (
-          <p className="text-center text-gray-500">No video available</p>
-        )}
+        <p className="text-center text-gray-500">Video temporarily disabled for debugging</p>
         <blockquote className="mt-4 text-xl italic text-center">
-          “{current.testimonial}”
+          "{current.testimonial}"
         </blockquote>
         <p className="text-center font-bold mt-2">{current.name}</p>
         <p className="text-center text-gray-600">{current.person}</p>
