@@ -1,27 +1,35 @@
 'use client';
-import '@fortawesome/fontawesome-free'
+
+import '@fortawesome/fontawesome-free';
 import { useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
+
 type NewsItem = {
   _id: string;
   imageId: string;
   uploadedAt: string;
 };
+
 export default function ClientNews() {
   const [newsItems, setNewsItems] = useState<NewsItem[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
   useEffect(() => {
     fetch('/api/news')
       .then((res) => res.json())
-      .then((data) => {
+      .then((data: unknown[]) => {
         const sorted = data
-          .map((item: any) => ({
-            ...item,
-            _id: item._id.toString(),
-            imageId: item.imageId?.toString() || '',
-            uploadedAt: item.uploadedAt || '',
-          }))
-          .sort((a: NewsItem, b: NewsItem) =>
+          .map((item: unknown) => {
+            const n = item as Partial<NewsItem> & { _id: string };
+            return {
+              ...n,
+              _id: n._id?.toString() ?? '',
+              imageId: n.imageId?.toString() ?? '',
+              uploadedAt: n.uploadedAt ?? '',
+            };
+          })
+          .sort((a, b) =>
             new Date(b.uploadedAt).getTime() - new Date(a.uploadedAt).getTime()
           );
         setNewsItems(sorted);
@@ -33,7 +41,7 @@ export default function ClientNews() {
     if (newsItems.length > 1) {
       intervalRef.current = setInterval(() => {
         setCurrentIndex((prevIndex) => (prevIndex + 1) % newsItems.length);
-      }, 5000); 
+      }, 5000);
 
       return () => clearInterval(intervalRef.current as NodeJS.Timeout);
     }
@@ -59,29 +67,34 @@ export default function ClientNews() {
 
       <div className="relative w-full max-w-[600px] h-[450px] flex items-center justify-center overflow-hidden bg-white rounded-3xl shadow-xl border border-gray-300">
         {currentItem && (
-                <img
-        key={currentItem._id}
-        src={`/api/images/${currentItem.imageId}?bucket=news`}
-        alt="News"
-        onError={(e) => (e.currentTarget.src = 'https://via.placeholder.com/300?text=Image+Not+Found')}
-        className="object-contain w-full h-full transition-all duration-500"
-      />
+          <div className="relative w-full h-full">
+            <Image
+              key={currentItem._id}
+              src={`/api/images/${currentItem.imageId}?bucket=news`}
+              alt="News"
+              fill
+              className="object-contain"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.src = 'https://via.placeholder.com/300?text=Image+Not+Found';
+              }}
+              sizes="(max-width: 600px) 100vw, 600px"
+            />
+          </div>
         )}
         <button
           onClick={() => handleManualScroll('left')}
-          className="absolute fas fa-arrow-left left-2 top-1/2 transform -translate-y-1/2 bg-blue-900 text-white px-3 py-2 rounded-full z-10"
+          className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-blue-900 text-white px-3 py-2 rounded-full z-10"
         >
-          
+          ◀
         </button>
         <button
           onClick={() => handleManualScroll('right')}
-          className="absolute fas fa-arrow-right right-2 top-1/2 transform -translate-y-1/2 bg-blue-900 text-white px-3 py-2 rounded-full z-10"
+          className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-blue-900 text-white px-3 py-2 rounded-full z-10"
         >
-          
+          ▶
         </button>
       </div>
-
-    
     </div>
   );
 }

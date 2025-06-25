@@ -1,4 +1,7 @@
-import React from "react";
+'use client';
+
+import React from 'react';
+import Image from 'next/image';
 
 const AccelarationHero = () => {
   return (
@@ -13,12 +16,17 @@ const AccelarationHero = () => {
           </span>
           <p className="max-w-2xl mb-8 text-gray-50 text-xl font-medium text-justify">
             <br />
-            Based in Gujarat, our Sector agnostic accelerator program invites applications from transformative businesses to create solutions for today’s rapidly changing environment. We continue to offer founders the opportunity to connect with individual as well as institutional investors and a full program focused on growth and scaling their business.
+            Based in Gujarat, our sector-agnostic accelerator program invites applications from transformative businesses to create solutions for today’s rapidly changing environment. We continue to offer founders the opportunity to connect with individual as well as institutional investors and a full program focused on growth and scaling their business.
           </p>
         </div>
-        {/* <div className="lg:col-span-1"></div> */}
+
         <div className="hidden lg:mt-0 lg:col-span-4 lg:flex">
-          <img src="/mobile-app.svg  " alt="mockup" />
+          <Image
+            src="/mobile-app.svg"
+            alt="mockup"
+            width={500}
+            height={500}
+          />
         </div>
       </div>
     </section>

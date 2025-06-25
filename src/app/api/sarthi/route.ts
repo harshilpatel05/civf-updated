@@ -33,10 +33,16 @@ export async function POST(req: Request) {
   }), { status: 201 });
 }
 
+type VerifiedEntry = {
+  _id: string;
+  imageId: string;
+  uploadedAt: Date;
+};
+
 export async function GET() {
   const { db, bucket } = await getDbAndBucket('memberImages');
   const entries = await db.collection('sarthi').find({}).toArray();
-  const verified: any[] = [];
+  const verified: VerifiedEntry[] = [];
 
   for (const entry of entries) {
     const exists = await bucket.find({ _id: entry.imageId }).hasNext();
@@ -54,3 +60,4 @@ export async function GET() {
     headers: { 'Content-Type': 'application/json' },
   });
 }
+

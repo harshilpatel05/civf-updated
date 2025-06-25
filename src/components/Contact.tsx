@@ -1,7 +1,6 @@
 'use client'
 import Image from 'next/image'
 import { Phone,Mail,MessageCircle,Linkedin } from "@deemlol/next-icons";
-import { Linefont } from 'next/font/google';
 import Link from 'next/link';
 export default function Contact(){
     return(

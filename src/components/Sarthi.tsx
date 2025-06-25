@@ -1,13 +1,17 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
+
+type SarthiImage = {
+  _id: string;
+  imageId: string;
+};
 
 export default function SarthiUploadPage() {
   const [images, setImages] = useState<File[]>([]);
   const [message, setMessage] = useState('');
-  const [existingImages, setExistingImages] = useState<
-    { _id: string; imageId: string }[]
-  >([]);
+  const [existingImages, setExistingImages] = useState<SarthiImage[]>([]);
 
   useEffect(() => {
     fetchImages();
@@ -16,9 +20,9 @@ export default function SarthiUploadPage() {
   const fetchImages = async () => {
     try {
       const res = await fetch('/api/sarthi');
-      const data = await res.json();
+      const data: SarthiImage[] = await res.json();
       setExistingImages(
-        data.map((img: any) => ({
+        data.map((img) => ({
           _id: img._id,
           imageId: img.imageId,
         }))
@@ -113,14 +117,19 @@ export default function SarthiUploadPage() {
             <ul className="space-y-4">
               {existingImages.map(({ _id, imageId }) => (
                 <li key={_id} className="border p-2 rounded">
-                  <img
-                    src={`/api/images/${imageId}`}
-                    alt={`Sarthi ${imageId}`}
-                    className="w-full h-auto rounded mb-2"
-                    onError={(e) =>
-                      (e.currentTarget.src = '/placeholder.png')
-                    }
-                  />
+                  <div className="relative w-full h-64 mb-2">
+                    <Image
+                      src={`/api/images/${imageId}`}
+                      alt={`Sarthi ${imageId}`}
+                      layout="fill"
+                      objectFit="contain"
+                      className="rounded"
+                      onError={(e) => {
+                        const target = e.currentTarget as HTMLImageElement;
+                        target.src = '/placeholder.png';
+                      }}
+                    />
+                  </div>
                   <button
                     onClick={() => handleDelete(_id)}
                     className="w-full bg-red-500 text-white py-1 rounded hover:bg-red-600 text-sm"

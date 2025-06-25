@@ -1,7 +1,5 @@
-    import { NextRequest } from 'next/server';
     import { getDbAndBucket } from '@/utils/mongodb';
     import { Readable } from 'stream';
-    import { ObjectId } from 'mongodb';
 
     export async function GET() {
     const { db } = await getDbAndBucket('civf2');

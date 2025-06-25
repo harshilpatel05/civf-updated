@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
 
 type EventType = {
   _id: string;
@@ -40,15 +41,15 @@ export default function ClientEvent() {
 
         <button
           onClick={() => scroll('left')}
-          className="absolute fas fa-arrow-left left-5 top-1/2 transform -translate-y-1/2 bg-blue-900 px-3 py-2 rounded-l z-10"
+          className="absolute left-5 top-1/2 transform -translate-y-1/2 bg-blue-900 px-3 py-2 rounded-l z-10"
         >
-          
+          ◀
         </button>
         <button
           onClick={() => scroll('right')}
-          className="absolute fas fa-arrow-right right-5 top-1/2 transform -translate-y-1/2 bg-blue-900 px-3 py-2 rounded-r z-10"
+          className="absolute right-5 top-1/2 transform -translate-y-1/2 bg-blue-900 px-3 py-2 rounded-r z-10"
         >
-          
+          ▶
         </button>
 
         <div
@@ -64,11 +65,13 @@ export default function ClientEvent() {
               key={event._id}
               className="bg-white min-w-[250px] lg:min-w-[300px] h-auto p-6 rounded border border-gray-200 flex flex-col justify-between"
             >
-              <div className="flex justify-center mb-4">
-                <img
+              <div className="flex justify-center mb-4 relative w-60 h-60">
+                <Image
                   src={event.image ?? '/placeholder.jpg'}
-                  alt={event.title}
-                  className="w-60 h-60 object-contain"
+                  alt={event.title ?? 'Event Image'}
+                  fill
+                  className="object-contain"
+                  sizes="(max-width: 768px) 100vw, 300px"
                 />
               </div>
               <h2 className="text-sm text-center font-semibold text-black mb-2">
@@ -95,11 +98,15 @@ export default function ClientEvent() {
               ✕ Close
             </button>
             <div className="flex flex-col items-center space-y-4 mt-8">
-              <img
-                src={selectedEvent.image ?? '/placeholder.jpg'}
-                alt={selectedEvent.title}
-                className="w-80 h-auto object-contain shadow-lg"
-              />
+              <div className="relative w-80 h-80">
+                <Image
+                  src={selectedEvent.image ?? '/placeholder.jpg'}
+                  alt={selectedEvent.title ?? 'Event Detail Image'}
+                  fill
+                  className="object-contain shadow-lg"
+                  sizes="(max-width: 768px) 100vw, 320px"
+                />
+              </div>
               <h2 className="text-xl font-bold text-black">{selectedEvent.title}</h2>
               <p className="text-black text-sm">{selectedEvent.description}</p>
             </div>

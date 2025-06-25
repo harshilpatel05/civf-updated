@@ -5,7 +5,7 @@ export async function DELETE(
   req: Request,
   { params }: { params: { id: string } }
 ) {
-  const { db, bucket } = await getDbAndBucket('events'); // still using 'memberImages' bucket
+  const { db, bucket } = await getDbAndBucket('events'); 
   const id = params.id;
 
   if (!ObjectId.isValid(id)) {

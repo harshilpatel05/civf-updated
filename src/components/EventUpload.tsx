@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 
 type EventItem = {
   _id: string;
@@ -136,14 +137,19 @@ export default function AdminEventsPage() {
             {events.map((event) => (
               <li key={event._id} className="border p-4 rounded shadow">
                 {event.image && (
-                  <img
-                    src={event.image}
-                    alt={event.title}
-                    className="w-full max-h-[300px] object-contain mb-3 rounded"
-                    onError={(e) =>
-                      (e.currentTarget as HTMLImageElement).src = '/https://via.placeholder.com/300?text=Image+Not+Found'
-                    }
-                  />
+                  <div className="relative w-full max-h-[300px] h-[300px] mb-3 rounded overflow-hidden">
+                    <Image
+                      src={event.image}
+                      alt={event.title}
+                      fill
+                      className="object-contain rounded"
+                      sizes="(max-width: 768px) 100vw, 600px"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = 'https://via.placeholder.com/300?text=Image+Not+Found';
+                      }}
+                    />
+                  </div>
                 )}
                 <h3 className="text-lg font-semibold">{event.title}</h3>
                 <p className="text-gray-700 mb-2">{event.description}</p>

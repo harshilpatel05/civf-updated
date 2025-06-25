@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 
 type TeamMember = {
   _id: string;
@@ -30,15 +31,17 @@ export default function ClientMembers() {
             key={member._id}
             className="bg-white rounded-3xl shadow-2xl w-64 h-80 flex flex-col items-center justify-center px-4"
           >
-            <div className="w-40 h-40 overflow-hidden rounded-full border border-black mb-4">
-              <img
+            <div className="w-40 h-40 relative overflow-hidden rounded-full border border-black mb-4">
+              <Image
                 src={`/api/images/${member.imageId}`}
                 alt={member.name}
-                className="w-full h-full object-cover"
+                fill
+                className="object-cover rounded-full"
+                sizes="160px"
               />
             </div>
             <div className="font-bold text-lg text-black text-center p-2">{member.name}</div>
-            <div className='outline-1 outline-black w-45'></div>
+            <div className="outline-1 outline-black w-45"></div>
             <div className="font-bold text-sm text-black text-center p-2">{member.position}</div>
           </div>
         ))}

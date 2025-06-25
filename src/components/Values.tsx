@@ -147,24 +147,25 @@ export default function Values() {
     <h1 className='text-center text-lg p-0.5 text-black font-bold'>Dr. R. V. Upadhyay</h1>
   </div>
   <div className="max-w-2xl text-justify">
-    <p className="text-black italic text-lg  leading-relaxed"><span className='fas fa-quote-left pr-5'></span>
+    <p className="text-black italic text-lg leading-relaxed">
+  <span className="fas fa-quote-left pr-5"></span>
+  We are excited to share the news of launching a Section-8 company focused on promoting entrepreneurship and innovation.
+  We believe that entrepreneurship is a key driver of innovation, and we are committed to supporting and nurturing entrepreneurs
+  within our company. They are essential to developing new ideas and products that will help us grow and succeed.
 
-      We are excited to share the news of launching a Section-8 company focused on promoting entrepreneurship and innovation.
-      We believe that entrepreneurship is a key driver of innovation, and we are committed to supporting and nurturing entrepreneurs
-      within our company. They are essential to developing new ideas and products that will help us grow and succeed.
+  Our company is continually seeking ways to support the next generation of entrepreneurs. We&apos;ve built an ecosystem for entrepreneurship
+  and innovation designed to help unlock potential and shape our collective future. Innovation is the lifeblood of any organization
+  and a constant source of inspiration. Organizations that embrace innovation thrive in good times and remain resilient during challenges.
 
-      Our company is continually seeking ways to support the next generation of entrepreneurs. We've built an ecosystem for entrepreneurship
-      and innovation designed to help unlock potential and shape our collective future. Innovation is the lifeblood of any organization
-      and a constant source of inspiration. Organizations that embrace innovation thrive in good times and remain resilient during challenges.
+  Creating an environment that encourages continuous learning, new ideas, and risk-taking is key to building a strong foundation
+  for growth. Innovation and entrepreneurship are critical drivers of economic progress. As the world becomes more interconnected,
+  investing in innovation is more important than ever—delivering returns through higher productivity, better wages, and improved
+  quality of life.
 
-      Creating an environment that encourages continuous learning, new ideas, and risk-taking is key to building a strong foundation
-      for growth. Innovation and entrepreneurship are critical drivers of economic progress. As the world becomes more interconnected,
-      investing in innovation is more important than ever—delivering returns through higher productivity, better wages, and improved
-      quality of life.
+  We are grateful for your continued support and look forward to building a successful future together.
+  <span className="fas fa-quote-right pl-5"></span>
+</p>
 
-      We are grateful for your continued support and look forward to building a successful future together.
-      <span className='fas fa-quote-right pl-5'></span>
-    </p>
   </div>
 </div>
 

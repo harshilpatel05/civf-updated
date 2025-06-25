@@ -1,13 +1,17 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
+
+type UploadedImage = {
+  _id: string;
+  imageId: string;
+};
 
 export default function NewsUploadPage() {
   const [images, setImages] = useState<File[]>([]);
   const [message, setMessage] = useState('');
-  const [existingImages, setExistingImages] = useState<
-    { _id: string; imageId: string }[]
-  >([]);
+  const [existingImages, setExistingImages] = useState<UploadedImage[]>([]);
 
   useEffect(() => {
     fetchImages();
@@ -16,9 +20,9 @@ export default function NewsUploadPage() {
   const fetchImages = async () => {
     try {
       const res = await fetch('/api/news');
-      const data = await res.json();
+      const data: UploadedImage[] = await res.json();
       setExistingImages(
-        data.map((img: any) => ({
+        data.map((img) => ({
           _id: img._id,
           imageId: img.imageId,
         }))
@@ -113,14 +117,19 @@ export default function NewsUploadPage() {
             <ul className="space-y-4">
               {existingImages.map(({ _id, imageId }) => (
                 <li key={_id} className="border p-2 rounded">
-                  <img
-                    src={`/api/images/${imageId}?bucket=news`}
-                    alt={`News ${imageId}`}
-                    className="w-full h-auto rounded mb-2"
-                    onError={(e) =>
-                      (e.currentTarget.src = 'https://via.placeholder.com/300?text=Image+Not+Found')
-                    }
-                  />
+                  <div className="relative w-full h-64 mb-2">
+                    <Image
+                      src={`/api/images/${imageId}?bucket=news`}
+                      alt={`News ${imageId}`}
+                      layout="fill"
+                      objectFit="contain"
+                      className="rounded"
+                      onError={(e) => {
+                        const target = e.currentTarget as HTMLImageElement;
+                        target.src = 'https://via.placeholder.com/300?text=Image+Not+Found';
+                      }}
+                    />
+                  </div>
                   <button
                     onClick={() => handleDelete(_id)}
                     className="w-full bg-red-500 text-white py-1 rounded hover:bg-red-600 text-sm"

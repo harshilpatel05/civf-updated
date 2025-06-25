@@ -1,6 +1,5 @@
 import { getDbAndBucket } from '@/utils/mongodb';
 import { Readable } from 'stream';
-import { ObjectId } from 'mongodb';
 
 const BUCKET_NAME = 'events';
 

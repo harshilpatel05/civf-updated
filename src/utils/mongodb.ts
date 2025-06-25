@@ -5,17 +5,22 @@ const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017';
 const DB_NAME = 'civf2';
 
 declare global {
-  var _mongoClientPromise: Promise<MongoClient> | undefined;
+  // use `let` instead of `var` for global augmentation
+  // eslint-disable-next-line no-var
+  let _mongoClientPromise: Promise<MongoClient> | undefined;
 }
 
-let clientPromise: Promise<MongoClient>;
+// Prevents TypeScript errors on global reuse
+let globalWithMongo = global as typeof globalThis & {
+  _mongoClientPromise?: Promise<MongoClient>;
+};
 
-if (!global._mongoClientPromise) {
+if (!globalWithMongo._mongoClientPromise) {
   const client = new MongoClient(MONGODB_URI);
-  global._mongoClientPromise = client.connect();
+  globalWithMongo._mongoClientPromise = client.connect();
 }
 
-clientPromise = global._mongoClientPromise;
+const clientPromise = globalWithMongo._mongoClientPromise!;
 
 /**
  * Get the MongoDB database and a GridFSBucket with a dynamic bucket name.
