@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import clientPromise, { getDbAndBucket } from '@/utils/mongodb';
+import { getDbAndBucket } from '@/utils/mongodb';
 
 // Reduced limits for serverless deployment compatibility
 const MAX_FILE_SIZE = 4 * 1024 * 1024; // 4MB for serverless compatibility
@@ -7,7 +7,6 @@ const ALLOWED_VIDEO_TYPES = ['video/mp4', 'video/webm', 'video/ogg', 'video/quic
 
 export async function GET() {
   try {
-    const client = await clientPromise;
     const { db } = await getDbAndBucket('testimonials');
     const testimonials = await db.collection('testimonials').find().toArray();
 
@@ -44,7 +43,6 @@ export async function POST(req: Request) {
       return new NextResponse('Missing required fields', { status: 400 });
     }
 
-    const client = await clientPromise;
     const { db } = await getDbAndBucket('testimonials');
     let video = null;
     

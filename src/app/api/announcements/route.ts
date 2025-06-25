@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-import clientPromise from '@/utils/mongodb';
 import { getDbAndBucket } from '@/utils/mongodb';
 
 // Reduced limits for serverless deployment compatibility
@@ -10,7 +9,6 @@ const ALLOWED_PDF_TYPES = ['application/pdf'];
 
 export async function GET() {
   try {
-    const client = await clientPromise;
     const { db } = await getDbAndBucket('announcements');
     const announcements = await db.collection('announcements').find().toArray();
 
@@ -65,7 +63,6 @@ export async function POST(req: Request) {
       return new NextResponse('Invalid file format. Please upload a PDF file.', { status: 400 });
     }
 
-    const client = await clientPromise;
     const { db } = await getDbAndBucket('announcements');
 
     try {

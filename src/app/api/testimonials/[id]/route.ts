@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import clientPromise, { getDbAndBucket } from '@/utils/mongodb';
+import { getDbAndBucket } from '@/utils/mongodb';
 import { ObjectId } from 'mongodb';
 
 export async function DELETE(
@@ -8,7 +8,6 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params;
-    const client = await clientPromise;
     const { db } = await getDbAndBucket('testimonials');
     const testimonial = await db.collection('testimonials').findOne({ _id: new ObjectId(id) });
     if (!testimonial) {

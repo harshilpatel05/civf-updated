@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
-import clientPromise from '@/utils/mongodb';
-import { ObjectId } from 'mongodb';
 import { getDbAndBucket } from '@/utils/mongodb';
+import { ObjectId } from 'mongodb';
 
 export async function DELETE(
   req: Request,
