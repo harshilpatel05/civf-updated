@@ -1,27 +1,28 @@
 import { ObjectId } from 'mongodb';
 import { getDbAndBucket } from '@/utils/mongodb';
+
+export const runtime = 'nodejs'; // ensure it's not an edge function
+
 export async function GET(req: Request) {
-  const url = new URL(req.url);
-  const id = url.pathname.split('/').pop();
-  const bucketName = url.searchParams.get('bucket') || 'memberImages';
+  const { searchParams, pathname } = new URL(req.url, 'http://localhost');
+  const id = pathname.split('/').pop();
+  const bucketName = searchParams.get('bucket') || 'memberImages';
+
   if (!id || !ObjectId.isValid(id)) {
     return new Response('Invalid image ID', { status: 400 });
   }
+
   const { bucket } = await getDbAndBucket(bucketName);
   const objectId = new ObjectId(id);
+
   const fileExists = await bucket.find({ _id: objectId }).hasNext();
   if (!fileExists) {
     return new Response('Image not found', { status: 404 });
   }
+
   const stream = bucket.openDownloadStream(objectId);
-  const readable = new ReadableStream({
-    start(controller) {
-      stream.on('data', (chunk) => controller.enqueue(chunk));
-      stream.on('end', () => controller.close());
-      stream.on('error', (err) => controller.error(err));
-    },
-  });
-  return new Response(readable, {
+
+  return new Response(stream as any, {
     status: 200,
     headers: {
       'Content-Type': 'image/jpeg',

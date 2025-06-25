@@ -1,12 +1,12 @@
 import { ObjectId } from 'mongodb';
 import { getDbAndBucket } from '@/utils/mongodb';
+import { NextRequest } from 'next/server';
 
-export async function DELETE(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(req: NextRequest) {
   const { db, bucket } = await getDbAndBucket('news');
-  const id = params.id;
+
+  const url = new URL(req.url);
+  const id = url.pathname.split('/').pop();
 
   if (!bucket) {
     return new Response(JSON.stringify({ error: 'GridFS bucket not initialized' }), {
@@ -14,7 +14,7 @@ export async function DELETE(
     });
   }
 
-  if (!ObjectId.isValid(id)) {
+  if (!id || !ObjectId.isValid(id)) {
     return new Response(JSON.stringify({ error: 'Invalid ID' }), {
       status: 400,
     });
