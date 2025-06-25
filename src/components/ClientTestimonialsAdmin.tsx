@@ -15,6 +15,7 @@ export default function ClientTestimonialsAdmin() {
   const [testimonial, setTestimonial] = useState("");
   const [video, setVideo] = useState<File | null>(null);
   const [message, setMessage] = useState("");
+  const [messageType, setMessageType] = useState<"success" | "error" | "">("");
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
 
   useEffect(() => {
@@ -25,6 +26,15 @@ export default function ClientTestimonialsAdmin() {
     const res = await fetch("/api/testimonials");
     const data = await res.json();
     setTestimonials(data);
+  };
+
+  const showMessage = (msg: string, type: "success" | "error") => {
+    setMessage(msg);
+    setMessageType(type);
+    setTimeout(() => {
+      setMessage("");
+      setMessageType("");
+    }, 3000);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -41,14 +51,14 @@ export default function ClientTestimonialsAdmin() {
     });
 
     if (res.ok) {
-      setMessage("Testimonial uploaded!");
+      showMessage("✅ Testimonial uploaded successfully!", "success");
       setName("");
       setPerson("");
       setTestimonial("");
       setVideo(null);
       fetchTestimonials();
     } else {
-      setMessage("Upload failed");
+      showMessage("❌ Upload failed. Please try again.", "error");
     }
   };
 
@@ -59,10 +69,10 @@ export default function ClientTestimonialsAdmin() {
       method: "DELETE",
     });
     if (res.ok) {
-      setMessage("Deleted testimonial");
+      showMessage("🗑️ Testimonial deleted successfully!", "success");
       fetchTestimonials();
     } else {
-      setMessage("Failed to delete");
+      showMessage("❌ Failed to delete testimonial.", "error");
     }
   };
 
@@ -70,6 +80,18 @@ export default function ClientTestimonialsAdmin() {
     <div className="flex justify-center">
       <div className="justify-center mt-12 text-black bg-white p-6 rounded-xl shadow-lg">
         <h1 className="text-2xl font-bold text-center mb-6">Add Testimonial</h1>
+        
+        {/* Enhanced Success/Error Message */}
+        {message && (
+          <div className={`mb-4 p-3 rounded-lg text-center font-medium ${
+            messageType === "success" 
+              ? "bg-green-100 text-green-800 border border-green-300" 
+              : "bg-red-100 text-red-800 border border-red-300"
+          }`}>
+            {message}
+          </div>
+        )}
+
         <div className="flex flex-col justify-center items-center md:flex-row gap-8">
           <form onSubmit={handleSubmit} className="flex-1 space-y-4 max-w-md">
             <input
@@ -107,7 +129,6 @@ export default function ClientTestimonialsAdmin() {
             >
               Upload
             </button>
-            {message && <p className="text-sm text-center mt-2">{message}</p>}
           </form>
           <div className="w-100 max-h-[400px] overflow-y-auto border rounded p-4">
             <h2 className="text-xl font-semibold mb-4">Existing Testimonials</h2>
