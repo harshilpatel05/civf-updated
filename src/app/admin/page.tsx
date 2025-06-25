@@ -5,6 +5,7 @@ import NewsUploadPage from '@/components/News';
 import Sarthi from '@/components/Sarthi';
 import UploadEvent from '@/components/EventUpload';
 import ClientTestimonialsAdmin from '@/components/ClientTestimonialsAdmin';
+import AnnouncementUpload from '@/components/AnnouncementUpload';
 
 export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -49,6 +50,8 @@ export default function AdminPage() {
       <Admin />
       <h1 className="text-4xl font-bold text-center p-5 pb-0">CIVF SARTHI</h1>
       <Sarthi />
+      <h1 className="text-4xl font-bold text-center p-5 pb-0">Announcements</h1>
+      <AnnouncementUpload />
       <h1 className="text-4xl font-bold text-center p-5 pb-0">News</h1>
       <NewsUploadPage />
       <h1 className="text-4xl font-bold text-center p-5 pb-0">Events</h1>
