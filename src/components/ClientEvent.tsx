@@ -43,13 +43,13 @@ export default function ClientEvent() {
           onClick={() => scroll('left')}
           className="absolute left-5 top-1/2 transform -translate-y-1/2 bg-blue-900 px-3 py-2 rounded-l z-10"
         >
-          ◀
+          <i className="fas fa-chevron-left"></i>
         </button>
         <button
           onClick={() => scroll('right')}
           className="absolute right-5 top-1/2 transform -translate-y-1/2 bg-blue-900 px-3 py-2 rounded-r z-10"
         >
-          ▶
+          <i className="fas fa-chevron-right"></i>
         </button>
 
         <div

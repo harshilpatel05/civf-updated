@@ -12,8 +12,9 @@ type NewsItem = {
 
 export default function ClientNews() {
   const [newsItems, setNewsItems] = useState<NewsItem[]>([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const [readMoreId, setReadMoreId] = useState<string | null>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const selectedNews = newsItems.find(item => item._id === readMoreId);
 
   useEffect(() => {
     fetch('/api/news')
@@ -37,64 +38,108 @@ export default function ClientNews() {
       .catch(console.error);
   }, []);
 
-  useEffect(() => {
-    if (newsItems.length > 1) {
-      intervalRef.current = setInterval(() => {
-        setCurrentIndex((prevIndex) => (prevIndex + 1) % newsItems.length);
-      }, 5000);
-
-      return () => clearInterval(intervalRef.current as NodeJS.Timeout);
+  const scroll = (direction: 'left' | 'right') => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollBy({
+        left: direction === 'left' ? -300 : 300,
+        behavior: 'smooth',
+      });
     }
-  }, [newsItems]);
-
-  const handleManualScroll = (direction: 'left' | 'right') => {
-    if (newsItems.length === 0) return;
-
-    setCurrentIndex((prevIndex) =>
-      direction === 'left'
-        ? (prevIndex - 1 + newsItems.length) % newsItems.length
-        : (prevIndex + 1) % newsItems.length
-    );
   };
 
-  const currentItem = newsItems[currentIndex];
+  useEffect(() => {
+    document.body.style.overflow = readMoreId !== null ? 'hidden' : '';
+  }, [readMoreId]);
 
   return (
-    <div className="bg-rose-100 relative w-full py-10 flex flex-col items-center">
-      <h1 className="text-3xl lg:text-5xl font-extrabold text-gray-800 mb-8 text-center">
-        News & Highlights
-      </h1>
+    <>
+      <div className="bg-gradient-to-tr from-rose-900 from-10% pb-8 to-pink-600 relative">
+        <div className="w-full text-center py-4">
+          <h1 className="text-3xl lg:text-5xl font-extrabold text-center text-white">
+            News & Highlights
+          </h1>
+        </div>
 
-      <div className="relative w-full max-w-[600px] h-[450px] flex items-center justify-center overflow-hidden bg-white rounded-3xl shadow-xl border border-gray-300">
-        {currentItem && (
-          <div className="relative w-full h-full">
-            <Image
-              key={currentItem._id}
-              src={`/api/images/${currentItem.imageId}?bucket=news`}
-              alt="News"
-              fill
-              className="object-contain"
-              onError={(e) => {
-                const target = e.target as HTMLImageElement;
-                target.src = 'https://via.placeholder.com/300?text=Image+Not+Found';
-              }}
-              sizes="(max-width: 600px) 100vw, 600px"
-            />
-          </div>
-        )}
         <button
-          onClick={() => handleManualScroll('left')}
-          className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-blue-900 text-white px-3 py-2 rounded-full z-10"
+          onClick={() => scroll('left')}
+          className="absolute left-5 top-1/2 transform -translate-y-1/2 bg-rose-900 px-3 py-2 rounded-l z-10"
         >
-          ◀
+          <i className="fas fa-chevron-left"></i>
         </button>
         <button
-          onClick={() => handleManualScroll('right')}
-          className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-blue-900 text-white px-3 py-2 rounded-full z-10"
+          onClick={() => scroll('right')}
+          className="absolute right-5 top-1/2 transform -translate-y-1/2 bg-rose-900 px-3 py-2 rounded-r z-10"
         >
-          ▶
+          <i className="fas fa-chevron-right"></i>
         </button>
+
+        <div
+          ref={scrollRef}
+          className="flex flex-row space-x-1 mx-10 px-4 pb-4 overflow-x-auto scroll-smooth"
+        >
+          {newsItems.map((newsItem) => (
+            <div
+              key={newsItem._id}
+              className="bg-white shadow-xl w-60 h-100 m-2 p-4 rounded border border-gray-200 flex flex-col justify-between"
+            >
+              <div className="flex justify-center m-2">
+                <div className="w-45 h-45 relative flex justify-center items-center overflow-hidden">
+                  <Image
+                    src={`/api/images/${newsItem.imageId}?bucket=news`}
+                    alt="News"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.src = 'https://via.placeholder.com/300?text=Image+Not+Found';
+                    }}
+                    fill
+                    className="object-contain"
+                  />
+                </div>
+              </div>
+
+              <div className="flex-grow flex flex-col justify-between">
+                <h2 className="text-sm text-black text-center font-semibold mb-2">
+                  News Item
+                </h2>
+                <div className="flex justify-center mt-auto">
+                  <button
+                    onClick={() => setReadMoreId(newsItem._id)}
+                    className="bg-rose-400 text-sm text-white py-2 px-5 rounded-lg hover:bg-rose-600 transition-all"
+                  >
+                    Read More
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
+
+      {selectedNews && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="relative w-full max-w-5xl h-[90vh] bg-white rounded shadow-lg overflow-hidden">
+            <button
+              onClick={() => setReadMoreId(null)}
+              className="absolute top-4 right-5 bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 z-10"
+            >
+              ✕ Close
+            </button>
+            <div className="w-full h-full flex items-center justify-center p-8">
+              <Image
+                src={`/api/images/${selectedNews.imageId}?bucket=news`}
+                alt="News"
+                fill
+                className="object-contain"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.src = 'https://via.placeholder.com/300?text=Image+Not+Found';
+                }}
+                sizes="(max-width: 768px) 100vw, 800px"
+              />
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

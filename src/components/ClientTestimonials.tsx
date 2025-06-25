@@ -99,7 +99,7 @@ export default function ClientTestimonial() {
               disabled={currentIndex === 0}
               className="bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-              ← Previous
+              <i className="fas fa-chevron-left mr-2"></i>Previous
             </button>
             <span className="flex items-center px-4 text-gray-600">
               {currentIndex + 1} of {testimonials.length}
@@ -109,7 +109,7 @@ export default function ClientTestimonial() {
               disabled={currentIndex === testimonials.length - 1}
               className="bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-              Next →
+              Next<i className="fas fa-chevron-right ml-2"></i>
             </button>
           </div>
         )}
