@@ -1,9 +1,6 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import dynamic from 'next/dynamic';
-
-const ReactPlayer = dynamic(() => import('react-player'), { ssr: false });
 
 type GridFSFile = {
   filename: string;
@@ -80,7 +77,7 @@ export default function ClientTestimonial() {
       <div className="w-full max-w-2xl mx-auto">
         <p className="text-center text-gray-500">Video temporarily disabled for debugging</p>
         <blockquote className="mt-4 text-xl italic text-center">
-          "{current.testimonial}"
+          &ldquo;{current.testimonial}&rdquo;
         </blockquote>
         <p className="text-center font-bold mt-2">{current.name}</p>
         <p className="text-center text-gray-600">{current.person}</p>

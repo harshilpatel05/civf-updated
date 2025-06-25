@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import clientPromise, { getDbAndBucket } from '@/utils/mongodb';
-import { ObjectId } from 'mongodb';
 
 export async function GET() {
   try {
