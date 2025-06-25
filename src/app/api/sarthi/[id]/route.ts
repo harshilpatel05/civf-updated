@@ -1,12 +1,11 @@
-// @ts-nocheck
 import { ObjectId } from 'mongodb';
 import { getDbAndBucket } from '@/utils/mongodb';
 import { NextRequest } from 'next/server';
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function DELETE(
   req: NextRequest,
-  context
+  context: any
 ) {
   const id = context.params.id;
   const { db, bucket } = await getDbAndBucket('memberImages');
