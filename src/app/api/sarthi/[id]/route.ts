@@ -4,10 +4,10 @@ import { NextRequest } from 'next/server';
 
 export async function DELETE(
   req: NextRequest,
-  context: { params: { id: string } }
+  { params }: { params: Record<string, string> }
 ) {
   const { db, bucket } = await getDbAndBucket('memberImages');
-  const id = context.params.id;
+  const id = params.id;
 
   if (!ObjectId.isValid(id)) {
     return new Response(JSON.stringify({ error: 'Invalid ID' }), { status: 400 });
@@ -22,10 +22,7 @@ export async function DELETE(
       });
     }
 
-    // Delete file from GridFS
     await bucket.delete(new ObjectId(doc.imageId));
-
-    // Delete document from sarthi collection
     await db.collection('sarthi').deleteOne({ _id: new ObjectId(id) });
 
     return new Response(JSON.stringify({ message: 'Image and record deleted.' }), {
