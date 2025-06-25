@@ -1,13 +1,13 @@
-import { NextRequest } from 'next/server';
 import { ObjectId } from 'mongodb';
 import { getDbAndBucket } from '@/utils/mongodb';
+import { NextRequest } from 'next/server';
 
 export async function DELETE(
   req: NextRequest,
-  context: { params: { id: string } }
+  context: { params: Record<string, string> } // ✅ THIS is the correct typing
 ) {
-  const { db, bucket } = await getDbAndBucket('memberImages');
   const id = context.params.id;
+  const { db, bucket } = await getDbAndBucket('memberImages');
 
   if (!ObjectId.isValid(id)) {
     return new Response(JSON.stringify({ error: 'Invalid ID' }), { status: 400 });
