@@ -80,10 +80,10 @@ export default function ClientNews() {
           {newsItems.map((newsItem) => (
             <div
               key={newsItem._id}
-              className="bg-white shadow-xl w-60 h-100 m-2 p-4 rounded border border-gray-200 flex flex-col justify-between"
+              className="bg-white shadow-xl w-80 h-120 m-2 p-4 rounded border border-gray-200 flex flex-col justify-between"
             >
               <div className="flex justify-center m-2">
-                <div className="w-45 h-45 relative flex justify-center items-center overflow-hidden">
+                <div className="w-60 h-60 relative flex justify-center items-center overflow-hidden">
                   <Image
                     src={`/api/images/${newsItem.imageId}?bucket=news`}
                     alt="News"
@@ -99,7 +99,6 @@ export default function ClientNews() {
 
               <div className="flex-grow flex flex-col justify-between">
                 <h2 className="text-sm text-black text-center font-semibold mb-2">
-                  News Item
                 </h2>
                 <div className="flex justify-center mt-auto">
                   <button
