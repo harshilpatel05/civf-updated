@@ -38,7 +38,7 @@ export default function ClientAnnouncements({ announcements }: { announcements: 
           </h1>
         </div>
 
-        <div className="flex items-center justify-center w-full relative">
+        <div className="flex items-center justify-between w-full relative">
           <button
             onClick={() => scroll('left')}
             className="bg-blue-900 text-white text-3xl px-6 py-4 rounded-full z-10 shadow-lg mx-2"
