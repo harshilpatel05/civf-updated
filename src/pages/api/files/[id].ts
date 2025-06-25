@@ -3,7 +3,7 @@ import { ObjectId, GridFSBucket } from 'mongodb';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { id } = req.query;
+  const { id, bucket: bucketName } = req.query;
 
   if (!id || typeof id !== 'string') {
     return res.status(400).send('Invalid file ID');
@@ -12,7 +12,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     const client = await clientPromise;
     const db = client.db();
-    const bucket = new GridFSBucket(db);
+    const bucket = bucketName && typeof bucketName === 'string'
+      ? new GridFSBucket(db, { bucketName })
+      : new GridFSBucket(db);
 
     const fileId = new ObjectId(id);
 

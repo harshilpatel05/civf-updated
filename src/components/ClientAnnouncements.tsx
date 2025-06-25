@@ -100,7 +100,7 @@ export default function ClientAnnouncements({ announcements }: { announcements: 
               ✕ Close
             </button>
             <iframe
-              src={`/api/files/${selectedAnnouncement.file._id}`}
+              src={`/api/files/${selectedAnnouncement.file._id}?bucket=announcements`}
               title="PDF Viewer"
               width="100%"
               height="100%"
