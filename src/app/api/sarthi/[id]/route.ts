@@ -4,7 +4,7 @@ import { NextRequest } from 'next/server';
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: Record<string, string> }
+  { params }: { params: { id: string } }
 ) {
   const { db, bucket } = await getDbAndBucket('memberImages');
   const id = params.id;
