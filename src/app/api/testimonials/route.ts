@@ -8,7 +8,7 @@ const ALLOWED_VIDEO_TYPES = ['video/mp4', 'video/webm', 'video/ogg', 'video/quic
 export async function GET() {
   try {
     const client = await clientPromise;
-    const db = client.db();
+    const { db } = await getDbAndBucket('testimonials');
     const testimonials = await db.collection('testimonials').find().toArray();
 
     return NextResponse.json(
@@ -45,7 +45,7 @@ export async function POST(req: Request) {
     }
 
     const client = await clientPromise;
-    const db = client.db();
+    const { db } = await getDbAndBucket('testimonials');
     let video = null;
     
     if (videoFile && videoFile.size > 0) {

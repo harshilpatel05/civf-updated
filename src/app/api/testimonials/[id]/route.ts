@@ -9,7 +9,7 @@ export async function DELETE(
   try {
     const { id } = await params;
     const client = await clientPromise;
-    const db = client.db();
+    const { db } = await getDbAndBucket('testimonials');
     const testimonial = await db.collection('testimonials').findOne({ _id: new ObjectId(id) });
     if (!testimonial) {
       return new NextResponse('Testimonial not found', { status: 404 });

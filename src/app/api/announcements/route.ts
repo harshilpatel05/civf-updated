@@ -11,7 +11,7 @@ const ALLOWED_PDF_TYPES = ['application/pdf'];
 export async function GET() {
   try {
     const client = await clientPromise;
-    const db = client.db();
+    const { db } = await getDbAndBucket('announcements');
     const announcements = await db.collection('announcements').find().toArray();
 
     return NextResponse.json(
@@ -66,7 +66,7 @@ export async function POST(req: Request) {
     }
 
     const client = await clientPromise;
-    const db = client.db();
+    const { db } = await getDbAndBucket('announcements');
 
     try {
       // Upload image to announcements bucket

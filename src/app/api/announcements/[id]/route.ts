@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import clientPromise from '@/utils/mongodb';
 import { ObjectId } from 'mongodb';
+import { getDbAndBucket } from '@/utils/mongodb';
 
 export async function DELETE(
   req: Request,
@@ -13,8 +14,7 @@ export async function DELETE(
       return new NextResponse('Missing announcement ID', { status: 400 });
     }
 
-    const client = await clientPromise;
-    const db = client.db();
+    const { db } = await getDbAndBucket('announcements');
     
     const result = await db.collection('announcements').deleteOne({
       _id: new ObjectId(id)
