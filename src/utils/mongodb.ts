@@ -4,11 +4,10 @@ const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017';
 const DB_NAME = 'civf2';
 
 declare global {
-  // Global variable for MongoDB client reuse in dev
-  var _mongoClientPromise: Promise<MongoClient> | undefined;
+  // Augment the Node.js global type
+  let _mongoClientPromise: Promise<MongoClient> | undefined;
 }
 
-// Use const instead of let, as it's not reassigned
 const globalWithMongo = global as typeof globalThis & {
   _mongoClientPromise?: Promise<MongoClient>;
 };
