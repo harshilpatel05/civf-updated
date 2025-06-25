@@ -39,26 +39,54 @@ export default function ClientTestimonialsAdmin() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate required fields
+    if (!name || !person || !testimonial) {
+      showMessage("❌ Please fill all required fields.", "error");
+      return;
+    }
+
+    // Validate video file if present
+    if (video) {
+      const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
+      if (video.size > MAX_FILE_SIZE) {
+        showMessage(`❌ Video file too large. Maximum size is ${MAX_FILE_SIZE / (1024 * 1024)}MB.`, "error");
+        return;
+      }
+
+      const allowedTypes = ['video/mp4', 'video/webm', 'video/ogg', 'video/quicktime'];
+      if (!allowedTypes.includes(video.type)) {
+        showMessage("❌ Invalid video format. Please use MP4, WebM, OGG, or QuickTime.", "error");
+        return;
+      }
+    }
+
     const formData = new FormData();
     formData.append("name", name);
     formData.append("person", person);
     formData.append("testimonial", testimonial);
     if (video) formData.append("video", video);
 
-    const res = await fetch("/api/testimonials", {
-      method: "POST",
-      body: formData,
-    });
+    try {
+      const res = await fetch("/api/testimonials", {
+        method: "POST",
+        body: formData,
+      });
 
-    if (res.ok) {
-      showMessage("✅ Testimonial uploaded successfully!", "success");
-      setName("");
-      setPerson("");
-      setTestimonial("");
-      setVideo(null);
-      fetchTestimonials();
-    } else {
-      showMessage("❌ Upload failed. Please try again.", "error");
+      if (res.ok) {
+        showMessage("✅ Testimonial uploaded successfully!", "success");
+        setName("");
+        setPerson("");
+        setTestimonial("");
+        setVideo(null);
+        fetchTestimonials();
+      } else {
+        const errorText = await res.text();
+        showMessage(`❌ Upload failed: ${errorText}`, "error");
+      }
+    } catch (err) {
+      console.error('Upload error:', err);
+      showMessage("❌ Network error. Please try again.", "error");
     }
   };
 
@@ -123,6 +151,14 @@ export default function ClientTestimonialsAdmin() {
               onChange={e => setVideo(e.target.files?.[0] || null)}
               className="w-full p-2 placeholder-black text-black border border-gray-300 rounded"
             />
+            <p className="text-xs text-gray-500 mt-1">
+              Maximum file size: 50MB. Supported formats: MP4, WebM, OGG, QuickTime
+            </p>
+            {video && (
+              <p className="text-xs text-blue-600">
+                Selected: {video.name} ({(video.size / (1024 * 1024)).toFixed(2)}MB)
+              </p>
+            )}
             <button
               type="submit"
               className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700 transition"
