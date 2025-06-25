@@ -2,9 +2,10 @@ import { ObjectId } from 'mongodb';
 import { getDbAndBucket } from '@/utils/mongodb';
 import { NextRequest } from 'next/server';
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export async function DELETE(
   req: NextRequest,
-  context: any // Use 'any' for maximum compatibility with Next.js App Router
+  context: { params: Record<string, string> }
 ) {
   const id = context.params.id;
   const { db, bucket } = await getDbAndBucket('memberImages');
