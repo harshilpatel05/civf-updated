@@ -108,22 +108,20 @@ export default function Faq() {
               key={index}
               open={open === index + 1}
               icon={<Icon id={index + 1} open={open} />}
-              onPointerEnterCapture={() => {}}
-              onPointerLeaveCapture={() => {}}
               placeholder={undefined}
-              nonce={undefined}
               onResize={undefined}
               onResizeCapture={undefined}
+              onPointerEnterCapture={undefined}
+              onPointerLeaveCapture={undefined}
             >
               <AccordionHeader
                 onClick={() => handleOpen(index + 1)}
                 className="py-8 font-bold text-black"
-                onPointerEnterCapture={() => {}}
-                onPointerLeaveCapture={() => {}}
                 placeholder={undefined}
-                nonce={undefined}
                 onResize={undefined}
                 onResizeCapture={undefined}
+                onPointerEnterCapture={undefined}
+                onPointerLeaveCapture={undefined}
               >
                 {index + 1}. {item.question}
               </AccordionHeader>

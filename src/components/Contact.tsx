@@ -24,7 +24,7 @@ export default function Contact(){
                 <div className='w-60 outline-1 outline-white mb-2 m-4'></div>
                 <div className='font-bold pt-0'>Follow Us</div>
                 <div className='flex flex-row space-x-3 p-3'>
-                <a href=""><MessageCircle size={24} color="#FFFFFF"/></a>
+                <a href="https://api.whatsapp.com/message/TDBNDOFJPC5AE1?autoload=1&app_absent=0"><MessageCircle size={24} color="#FFFFFF"/></a>
                 <a href='https://www.linkedin.com/company/charusat-innovative-ventures-foundation ' target='_blank'><div className='p-1 pb-0 pt-0'><Linkedin size={24} color="#FFFFFF" /> </div></a>
                 </div>
 
@@ -37,20 +37,20 @@ export default function Contact(){
               <div className='flex justify-center  pt-10 flex-row space-x-32'>
               <div className='p-5 pt-0  '>
                 <ul className='text-xl space-y-4'>
-                  <li><Link href=''>About Us</Link></li>
-                  <li><Link href=''>Start Up Portfolio</Link></li>
-                  <li><Link href=''>Services</Link></li>
+                  <li><Link href='/aboutUs'>About Us</Link></li>
+                  <li><Link href='/startup'>Start Up Portfolio</Link></li>
+                  <li><Link href='/services'>Services</Link></li>
                   <li><Link href=''>Donate</Link></li>
-                  <li><Link href=''>Career at CIVF</Link></li>
+                  <li><Link href='/career'>Career at CIVF</Link></li>
                 </ul>
               </div>
               <div className='p-5 pt-0'>
                 <ul className='text-xl space-y-4'>
-                  <li><Link href=''>Acceleration Program</Link></li>
-                  <li><Link href=''>Facilities</Link></li>
-                  <li><Link href=''>Blog/Reports</Link></li>
-                  <li><Link href=''>FAQs</Link></li>
-                  <li><Link href=''>Contact Us</Link></li>
+                  <li><Link href='/accelaration-program'>Acceleration Program</Link></li>
+                  <li><Link href='/facilities'>Facilities</Link></li>
+                  <li><Link href='/blog'>Blog/Reports</Link></li>
+                  <li><Link href='/faq'>FAQs</Link></li>
+                  <li><Link href='/contact'>Contact Us</Link></li>
                 </ul>
               </div>
               </div>
