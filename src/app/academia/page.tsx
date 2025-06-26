@@ -17,7 +17,7 @@ const centers = [
   {
     name: "CHARUSAT ERP Developemt Cell",
     image: "/Benefits/Services/academia/erp.png",
-    link: "https://civf.co.in/dearflip-jquery-flipbook/examples/5L1BDIPS(CIPL).html",
+    link: "https://civf.co.in/dearflip-jquery-flipbook/examples/4L1e-Gov.html",
   },
   {
     name: "Dr. K. C. Patel R & D Center (KRADLE)",
@@ -27,7 +27,7 @@ const centers = [
   {
     name: "Academic Quality Management & Assurance Center",
     image: "/Benefits/Services/academia/acq.png",
-    link: "https://civf.co.in/dearflip-jquery-flipbook/examples/CenterofExcellence.html",
+    link: "https://civf.co.in/dearflip-jquery-flipbook/examples/ACQMA_NAAC.html",
   },
   {
     name: "Charusat Pharmaceutical Research Consultancy and Testing Cell",
@@ -43,7 +43,7 @@ export default function AcademiaPage() {
       <Header />
       <Navbar />
       <div className="py-12 px-4">
-        <h1 className="text-4xl font-bold text-center mb-12 text-gray-800">Supporting Centers</h1>
+        <h1 className="text-4xl font-bold text-center mb-12 text-gray-800">Services for Academia</h1>
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
           {centers.map((center) => (
             <a

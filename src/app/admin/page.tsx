@@ -7,6 +7,7 @@ import UploadEvent from '@/components/EventUpload';
 import ClientTestimonialsAdmin from '@/components/ClientTestimonialsAdmin';
 import AnnouncementUpload from '@/components/AnnouncementUpload';
 import StartupAdmin from '@/components/StartupAdmin';
+import GalleryAdmin from '@/components/GalleryAdmin';
 export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [inputPassword, setInputPassword] = useState('');
@@ -54,6 +55,8 @@ export default function AdminPage() {
       <AnnouncementUpload />
       <h1 className="text-4xl font-bold text-center p-5 pb-0">Startups</h1>
       <StartupAdmin />
+      <h1 className="text-4xl font-bold text-center p-5 pb-0">Gallery</h1>
+      <GalleryAdmin />
       <h1 className="text-4xl font-bold text-center p-5 pb-0">Testimonials</h1>
       <ClientTestimonialsAdmin />
       <h1 className="text-4xl font-bold text-center p-5 pb-0">News</h1>
