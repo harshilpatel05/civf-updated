@@ -2,24 +2,27 @@
 
 import { useEffect, useRef, useState } from 'react';
 
-type GridFSFile = {
-  filename: string;
-};
-
 type Testimonial = {
   _id: string;
   name: string;
   person: string;
   testimonial: string;
-  video?: GridFSFile | null;
+  vimeoUrl?: string;
 };
+
+// TypeScript: declare window.YT and window.onYouTubeIframeAPIReady
+declare global {
+  interface Window {
+    YT: any;
+    onYouTubeIframeAPIReady: any;
+  }
+}
 
 export default function ClientTestimonial() {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchTestimonials = async () => {
@@ -38,26 +41,6 @@ export default function ClientTestimonial() {
     fetchTestimonials();
   }, []);
 
-  const scroll = (direction: 'left' | 'right') => {
-    if (!scrollRef.current || testimonials.length === 0) return;
-
-    const cardWidth =
-      scrollRef.current?.firstChild instanceof HTMLElement
-        ? scrollRef.current.firstChild.clientWidth
-        : 0;
-
-    const newIndex =
-      direction === 'left'
-        ? Math.max(0, currentIndex - 1)
-        : Math.min(testimonials.length - 1, currentIndex + 1);
-
-    setCurrentIndex(newIndex);
-    scrollRef.current.scrollTo({
-      left: cardWidth * newIndex,
-      behavior: 'smooth',
-    });
-  };
-
   if (loading) return <p className="text-center mt-10">Loading testimonials...</p>;
   if (error) return <p className="text-center text-red-500 mt-10">{error}</p>;
   if (testimonials.length === 0) return <p className="text-center mt-10">No testimonials found.</p>;
@@ -66,36 +49,38 @@ export default function ClientTestimonial() {
 
   return (
     <div className="bg-gradient-to-r from-blue-50 to-indigo-100 py-16">
-      <div className="max-w-4xl mx-auto px-4">
-        <h1 className="text-center text-4xl font-bold text-gray-800 mb-12">What Our Community Says</h1>
-        
-        <div className="bg-white rounded-2xl shadow-xl p-8 relative">
-          <blockquote className="text-xl italic text-center text-gray-700 mb-6">
-            &ldquo;{current.testimonial}&rdquo;
-          </blockquote>
-          
-          <div className="text-center">
-            <p className="text-lg font-semibold text-gray-800">{current.name}</p>
-            <p className="text-gray-600">{current.person}</p>
-          </div>
-
-          {current.video?.filename && (
-            <div className="mt-6 text-center">
-              <video 
-                controls 
-                className="mx-auto max-w-full h-auto rounded-lg shadow-md"
-                src={`/api/video/${encodeURIComponent(current.video.filename)}`}
-              >
-                Your browser does not support the video tag.
-              </video>
+      <div className="max-w-7xl mx-auto px-4">
+        <h1 className="text-center text-4xl font-bold text-gray-800 mb-12">Testimonials</h1>
+        <div className="bg-white rounded-2xl shadow-xl p-8 relative flex flex-col md:flex-row items-center md:items-stretch gap-8">
+          {/* Video on the left */}
+          {current.vimeoUrl && current.vimeoUrl.trim() !== '' && (
+            <div className="w-full md:w-1/2 flex justify-center items-center">
+              <div className="aspect-w-16 aspect-h-9 w-full max-w-2xl mx-auto">
+                <iframe
+                  src={getVimeoEmbedUrl(current.vimeoUrl)}
+                  allow="autoplay; fullscreen; picture-in-picture"
+                  className="w-full h-[480px] rounded-lg shadow-md"
+                  frameBorder="0"
+                  allowFullScreen
+                ></iframe>
+              </div>
             </div>
           )}
+          {/* Testimonial on the right */}
+          <div className="w-full md:w-1/2 flex flex-col justify-center items-center md:items-start text-center md:text-left">
+            <blockquote className="text-xl md:text-2xl italic text-gray-700 mb-4">
+              &ldquo;{current.testimonial}&rdquo;
+            </blockquote>
+            <div className="mt-2 text-sm text-gray-600">
+              <div className="font-semibold">{current.name}</div>
+              <div>{current.person}</div>
+            </div>
+          </div>
         </div>
-
         {testimonials.length > 1 && (
           <div className="flex items-center justify-center gap-4 mt-8">
             <button
-              onClick={() => scroll('left')}
+              onClick={() => setCurrentIndex(Math.max(0, currentIndex - 1))}
               disabled={currentIndex === 0}
               className="bg-blue-600 text-white text-3xl px-6 py-4 rounded-full shadow-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
@@ -107,7 +92,7 @@ export default function ClientTestimonial() {
               </span>
             </div>
             <button
-              onClick={() => scroll('right')}
+              onClick={() => setCurrentIndex(Math.min(testimonials.length - 1, currentIndex + 1))}
               disabled={currentIndex === testimonials.length - 1}
               className="bg-blue-600 text-white text-3xl px-6 py-4 rounded-full shadow-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
@@ -118,4 +103,15 @@ export default function ClientTestimonial() {
       </div>
     </div>
   );
+}
+
+// Helper to convert a Vimeo URL to an embed URL with autoplay, mute, and minimal controls
+function getVimeoEmbedUrl(url?: string) {
+  if (!url) return '';
+  // Extract the video ID from various Vimeo URL formats
+  const match = url.match(/(?:vimeo\.com\/(?:.*\/)?|player\.vimeo\.com\/video\/)(\d+)/);
+  if (match && match[1]) {
+    return `https://player.vimeo.com/video/${match[1]}?autoplay=1&muted=1&title=0&byline=0&portrait=0&controls=1`;
+  }
+  return '';
 }

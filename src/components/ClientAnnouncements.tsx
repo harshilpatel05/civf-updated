@@ -14,6 +14,9 @@ type Announcement = {
 export default function ClientAnnouncements({ announcements }: { announcements: Announcement[] }) {
   const [readMoreId, setReadMoreId] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const isDragging = useRef(false);
+  const startX = useRef(0);
+  const scrollLeft = useRef(0);
   const selectedAnnouncement = announcements.find(a => a._id === readMoreId);
 
   const scroll = (direction: 'left' | 'right') => {
@@ -24,6 +27,24 @@ export default function ClientAnnouncements({ announcements }: { announcements: 
       });
     }
   };
+
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    isDragging.current = true;
+    startX.current = e.pageX - (scrollRef.current?.offsetLeft || 0);
+    scrollLeft.current = scrollRef.current?.scrollLeft || 0;
+  };
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!isDragging.current || !scrollRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - scrollRef.current.offsetLeft;
+    const walk = x - startX.current;
+    scrollRef.current.scrollLeft = scrollLeft.current - walk;
+  };
+
+  const handleMouseUp = () => { isDragging.current = false; };
+
+  const handleMouseLeave = () => { isDragging.current = false; };
 
   useEffect(() => {
     document.body.style.overflow = readMoreId !== null ? 'hidden' : '';
@@ -47,8 +68,12 @@ export default function ClientAnnouncements({ announcements }: { announcements: 
           </button>
           <div
             ref={scrollRef}
-            className="flex flex-row space-x-1 px-4 pb-4 overflow-x-auto scroll-smooth"
+            className="flex flex-row space-x-1 px-4 pb-4 overflow-x-auto scroll-smooth cursor-grab active:cursor-grabbing"
             style={{ maxWidth: '90vw' }}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseLeave}
           >
             {announcements.map((announcement) => (
               <div

@@ -6,14 +6,14 @@ type Testimonial = {
   name: string;
   person: string;
   testimonial: string;
-  video?: { filename: string } | null;
+  vimeoUrl?: string;
 };
 
 export default function ClientTestimonialsAdmin() {
   const [name, setName] = useState("");
   const [person, setPerson] = useState("");
   const [testimonial, setTestimonial] = useState("");
-  const [video, setVideo] = useState<File | null>(null);
+  const [vimeoUrl, setVimeoUrl] = useState('');
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState<"success" | "error" | "">("");
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
@@ -46,26 +46,11 @@ export default function ClientTestimonialsAdmin() {
       return;
     }
 
-    // Validate video file if present
-    if (video) {
-      const MAX_FILE_SIZE = 4 * 1024 * 1024; // 4MB for deployment
-      if (video.size > MAX_FILE_SIZE) {
-        showMessage(`❌ Video file too large. Maximum size is ${MAX_FILE_SIZE / (1024 * 1024)}MB for deployment. Please compress your video.`, "error");
-        return;
-      }
-
-      const allowedTypes = ['video/mp4', 'video/webm', 'video/ogg', 'video/quicktime'];
-      if (!allowedTypes.includes(video.type)) {
-        showMessage("❌ Invalid video format. Please use MP4, WebM, OGG, or QuickTime.", "error");
-        return;
-      }
-    }
-
     const formData = new FormData();
     formData.append("name", name);
     formData.append("person", person);
     formData.append("testimonial", testimonial);
-    if (video) formData.append("video", video);
+    formData.append("vimeoUrl", vimeoUrl);
 
     try {
       const res = await fetch("/api/testimonials", {
@@ -78,7 +63,7 @@ export default function ClientTestimonialsAdmin() {
         setName("");
         setPerson("");
         setTestimonial("");
-        setVideo(null);
+        setVimeoUrl("");
         fetchTestimonials();
       } else {
         const errorText = await res.text();
@@ -158,19 +143,15 @@ export default function ClientTestimonialsAdmin() {
               className="w-full p-2 border text-black placeholder-black border-gray-300 rounded"
             />
             <input
-              type="file"
-              accept="video/*"
-              onChange={e => setVideo(e.target.files?.[0] || null)}
-              className="w-full p-2 placeholder-black text-black border border-gray-300 rounded"
+              type="url"
+              placeholder="Vimeo Video URL (optional)"
+              value={vimeoUrl}
+              onChange={e => setVimeoUrl(e.target.value)}
+              className="w-full p-2 border text-black placeholder-black border-gray-300 rounded"
             />
             <p className="text-xs text-gray-500 mt-1">
-              Maximum file size: 4MB for deployment. Supported formats: MP4, WebM, OGG, QuickTime
+              Paste a Vimeo video link to display a video with the testimonial (optional).
             </p>
-            {video && (
-              <p className="text-xs text-blue-600">
-                Selected: {video.name} ({(video.size / (1024 * 1024)).toFixed(2)}MB)
-              </p>
-            )}
             <button
               type="submit"
               className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700 transition"
@@ -193,8 +174,8 @@ export default function ClientTestimonialsAdmin() {
                       <p className="font-medium">{t.name}</p>
                       <p className="text-sm text-gray-600">{t.person}</p>
                       <p className="text-xs text-gray-700 italic">{t.testimonial}</p>
-                      {t.video?.filename && (
-                        <span className="text-xs text-blue-600">[Video]</span>
+                      {t.vimeoUrl && t.vimeoUrl.trim() !== '' && (
+                        <span className="text-xs text-blue-600">[Vimeo]</span>
                       )}
                     </div>
                     <button

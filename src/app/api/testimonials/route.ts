@@ -16,7 +16,7 @@ export async function GET() {
         name: doc.name,
         person: doc.person,
         testimonial: doc.testimonial,
-        video: doc.video?.filename ? { filename: doc.video.filename } : null,
+        vimeoUrl: doc.vimeoUrl || '',
       }))
     );
   } catch (err) {
@@ -36,7 +36,7 @@ export async function POST(req: Request) {
     const name = formData.get('name') as string;
     const person = formData.get('person') as string;
     const testimonial = formData.get('testimonial') as string;
-    const videoFile = formData.get('video') as File | null;
+    const vimeoUrl = formData.get('vimeoUrl') as string;
 
     // Validate required fields
     if (!name || !person || !testimonial) {
@@ -44,47 +44,11 @@ export async function POST(req: Request) {
     }
 
     const { db } = await getDbAndBucket('testimonials');
-    let video = null;
-    
-    if (videoFile && videoFile.size > 0) {
-      // Validate file size
-      if (videoFile.size > MAX_FILE_SIZE) {
-        return new NextResponse(`File too large. Maximum size is ${MAX_FILE_SIZE / (1024 * 1024)}MB for deployment. Please compress your video.`, { status: 413 });
-      }
-
-      // Validate file type
-      if (!ALLOWED_VIDEO_TYPES.includes(videoFile.type)) {
-        return new NextResponse('Invalid file type. Only MP4, WebM, OGG, and QuickTime videos are allowed.', { status: 400 });
-      }
-
-      try {
-        // Store video in GridFS
-        const { bucket } = await getDbAndBucket('testimonials');
-        const uploadStream = bucket.openUploadStream(videoFile.name, {
-          contentType: videoFile.type,
-        });
-        
-        const arrayBuffer = await videoFile.arrayBuffer();
-        const buffer = Buffer.from(arrayBuffer);
-        uploadStream.end(buffer);
-        
-        await new Promise((resolve, reject) => {
-          uploadStream.on('finish', resolve);
-          uploadStream.on('error', reject);
-        });
-        
-        video = { filename: videoFile.name };
-      } catch (uploadError) {
-        console.error('Video upload error:', uploadError);
-        return new NextResponse('Failed to upload video file', { status: 500 });
-      }
-    }
-    
     const result = await db.collection('testimonials').insertOne({
       name,
       person,
       testimonial,
-      video,
+      vimeoUrl: vimeoUrl || '',
     });
     
     return NextResponse.json({ _id: String(result.insertedId) });

@@ -14,6 +14,9 @@ export default function ClientEvent() {
   const [events, setEvents] = useState<EventType[]>([]);
   const [readMoreId, setReadMoreId] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const isDragging = useRef(false);
+  const startX = useRef(0);
+  const scrollLeft = useRef(0);
   const selectedEvent = events.find((e) => e._id === readMoreId);
 
   useEffect(() => {
@@ -32,6 +35,24 @@ export default function ClientEvent() {
     }
   };
 
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    isDragging.current = true;
+    startX.current = e.pageX - (scrollRef.current?.offsetLeft || 0);
+    scrollLeft.current = scrollRef.current?.scrollLeft || 0;
+  };
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!isDragging.current || !scrollRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - scrollRef.current.offsetLeft;
+    const walk = x - startX.current;
+    scrollRef.current.scrollLeft = scrollLeft.current - walk;
+  };
+
+  const handleMouseUp = () => { isDragging.current = false; };
+
+  const handleMouseLeave = () => { isDragging.current = false; };
+
   return (
     <>
       <div className="bg-rose-100 relative">
@@ -48,8 +69,12 @@ export default function ClientEvent() {
           </button>
           <div
             ref={scrollRef}
-            className="mx-auto px-10 pb-4 flex overflow-x-auto justify-start scroll-smooth hide-scrollbar"
+            className="mx-auto px-10 pb-4 flex overflow-x-auto justify-start scroll-smooth hide-scrollbar cursor-grab active:cursor-grabbing"
             style={{ maxWidth: '90vw', gap: '16px' }}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseLeave}
           >
             {events.map((event) => (
               <div
