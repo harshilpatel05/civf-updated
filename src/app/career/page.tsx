@@ -3,6 +3,7 @@ import React, { Fragment } from "react";
 import { Disclosure, Tab } from "@headlessui/react";
 import Header from "@/components/Header";
 import Contact from "@/components/Contact";
+import Navbar from "@/components/Navbar";
 const page = () => {
   const data = {
     Openings: [
@@ -69,6 +70,7 @@ const page = () => {
     <div className="bg-white min-h-screen">
         <Header/>
       <div>
+        <Navbar/>
         <section className="mb-40">
           <div
             className="relative overflow-hidden bg-[url('/images/cr.jpg')] bg-no-repeat bg-cover"
