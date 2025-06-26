@@ -32,60 +32,53 @@ const Flow = () => {
           {[1, 2, 3].map((num) => (
             <li
               key={num}
-              className="border-l-2 border-rose-600 w-full md:w-8/12 lg:w-5/12"
+              className="border-l-2 border-rose-600 w-full md:w-8/12 lg:w-5/12 flex items-center"
             >
-              <div className="md:flex flex-start">
-                <div className="bg-rose-600 w-6 h-6 flex items-center justify-center rounded-full -ml-3.5">
+              <div className="flex items-center justify-center -ml-3" style={{ minWidth: '1.5rem' }}>
+                <div className="bg-rose-600 w-6 h-6 flex items-center justify-center rounded-full ring-2 ring-white shadow">
                   <svg
                     aria-hidden="true"
-                    className="text-white w-3 h-3"
+                    className="w-3.5 h-3.5 text-white"
+                    fill="currentColor"
+                    viewBox="0 0 16 16"
                     xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 448 512"
                   >
-                    <path
-                      fill="currentColor"
-                      d="M0 464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V192H0v272z"
-                    />
+                    <circle cx="8" cy="8" r="8" />
                   </svg>
                 </div>
-                <div
-                  onClick={() => {
-                    setStage(num);
-                    setOpen(true);
-                  }}
-                  className="block cursor-pointer p-6 rounded-lg shadow-lg bg-gradient-to-tr from-slate-100 to-slate-300 w-11/12 max-w-lg ml-6 mb-10"
-                >
-                  <div className="flex justify-between mb-4">
-                    <span className="font-bold text-xl text-rose-600">
-                      Stage {num}
-                    </span>
-                  </div>
-                  <p className="text-gray-700 text-lg">
-                    {num === 1 && (
-                      <>
-                        &#x2022; Online application<br />
-                        &#x2022; Preliminary screening<br />
-                        &#x2022; Evaluation by screening committee
-                      </>
-                    )}
-                    {num === 2 && (
-                      <>
-                        &#x2022; Pitch presentation<br />
-                        &#x2022; Recommending improvements<br />
-                        &#x2022; Collaboration agreement
-                      </>
-                    )}
-                    {num === 3 && <>Induction into CIVF</>}
-                  </p>
+              </div>
+              <div
+                onClick={() => {
+                  setStage(num);
+                  setOpen(true);
+                }}
+                className="block cursor-pointer p-6 rounded-lg shadow-lg bg-gradient-to-tr from-slate-100 to-slate-300 w-11/12 max-w-lg ml-6 mb-10"
+              >
+                <div className="flex justify-between mb-4">
+                  <span className="font-bold text-xl text-rose-600">
+                    Stage {num}
+                  </span>
                 </div>
+                <p className="text-gray-700 text-lg">
+                  {num === 1 && (
+                    <>
+                      &#x2022; Online application<br />
+                      &#x2022; Preliminary screening<br />
+                      &#x2022; Evaluation by screening committee
+                    </>
+                  )}
+                  {num === 2 && (
+                    <>
+                      &#x2022; Pitch presentation<br />
+                      &#x2022; Recommending improvements<br />
+                      &#x2022; Collaboration agreement
+                    </>
+                  )}
+                  {num === 3 && <>Induction into CIVF</>}
+                </p>
               </div>
             </li>
           ))}
-          <li className="border-l-2 border-rose-600 w-full md:w-8/12 lg:w-5/12">
-            <div className="md:flex flex-start">
-              <div className="bg-rose-600 w-6 h-6 rounded-full -ml-3.5" />
-            </div>
-          </li>
         </ol>
       </figure>
 

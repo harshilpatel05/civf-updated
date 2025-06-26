@@ -57,14 +57,14 @@ const AcpForm = () => {
 
   return (
     <section className="bg-yellow-500 py-10">
-      <h1 className="text-center text-3xl font-extrabold text-white underline hover:text-gray-200">
+      <h1 className="text-center text-3xl font-extrabold text-white ">
         Apply for Acceleration
       </h1>
 
       <div className="flex justify-center py-8 lg:py-0">
         <div className="w-full md:11/12 lg:w-5/6 xl:w-3/6 m-10 rounded-lg shadow p-0 xl:p-0 bg-gray-100/50 backdrop-blur">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-            <h1 className="text-xl font-bold leading-tight tracking-tight  md:text-2xl  text-gray-800">
+            <h1 className="text-xl font-bold leading-tight tracking-tight  md:text-2xl  text-black">
               Enter your details
             </h1>
             <form
@@ -72,14 +72,14 @@ const AcpForm = () => {
               className="space-y-4 md:space-y-6"
               onSubmit={handleSubmit}
             >
-              <h2 className="text-lg font-medium border-b border-gray-600">
+              <h2 className="text-lg font-medium border-b border-black text-black">
                 Founders&apos; Details
               </h2>
               <div className="md:grid md:grid-cols-2 md:gap-5">
                 <div>
                   <label
                     htmlFor="firstName"
-                    className="block my-2 text-sm font-medium "
+                    className="block my-2 text-sm font-medium text-black"
                   >
                     First Name
                     <span className="text-red-500">*</span>
@@ -88,7 +88,7 @@ const AcpForm = () => {
                     type="text"
                     name="firstName"
                     id="firstName"
-                    className=" border outline-none  sm:text-sm rounded-lg block w-full p-2.5  bg-gray  border-color2  placeholder-gray-400  focus:ring-rose-800  focus:border-rose-500"
+                    className="border border-black outline-black text-black sm:text-sm rounded-lg block w-full p-2.5 bg-white placeholder-black focus:ring-black focus:border-black"
                     placeholder="First Name"
                     required
                   />
@@ -96,7 +96,7 @@ const AcpForm = () => {
                 <div>
                   <label
                     htmlFor="lastName"
-                    className="block my-2 text-sm font-medium "
+                    className="block my-2 text-sm font-medium text-black"
                   >
                     Last Name
                     <span className="text-red-500">*</span>
@@ -105,7 +105,7 @@ const AcpForm = () => {
                     type="text"
                     name="lastName"
                     id="lastName"
-                    className=" border outline-none  sm:text-sm rounded-lg block w-full p-2.5  bg-gray  border-color2  placeholder-gray-400  focus:ring-rose-800  focus:border-rose-500"
+                    className="border border-black outline-black text-black sm:text-sm rounded-lg block w-full p-2.5 bg-white placeholder-black focus:ring-black focus:border-black"
                     placeholder="Last Name"
                     required
                   />
@@ -113,7 +113,7 @@ const AcpForm = () => {
                 <div>
                   <label
                     htmlFor="email"
-                    className="block my-2 text-sm font-medium "
+                    className="block my-2 text-sm font-medium text-black"
                   >
                     Your email
                     <span className="text-red-500">*</span>
@@ -122,7 +122,7 @@ const AcpForm = () => {
                     type="email"
                     name="email"
                     id="email"
-                    className=" border outline-none  sm:text-sm rounded-lg block w-full p-2.5  bg-gray  border-color2  placeholder-gray-400  focus:ring-rose-800  focus:border-rose-500"
+                    className="border border-black outline-black text-black sm:text-sm rounded-lg block w-full p-2.5 bg-white placeholder-black focus:ring-black focus:border-black"
                     placeholder="name@company.com"
                     required
                   />
@@ -130,7 +130,7 @@ const AcpForm = () => {
                 <div>
                   <label
                     htmlFor="phone"
-                    className="block my-2 text-sm font-medium "
+                    className="block my-2 text-sm font-medium text-black"
                   >
                     Phone
                     <span className="text-red-500">*</span>
@@ -139,7 +139,7 @@ const AcpForm = () => {
                     type="number"
                     name="phone"
                     id="phone"
-                    className=" border outline-none  sm:text-sm rounded-lg block w-full p-2.5  bg-gray  border-color2  placeholder-gray-400  focus:ring-rose-800  focus:border-rose-500"
+                    className="border border-black outline-black text-black sm:text-sm rounded-lg block w-full p-2.5 bg-white placeholder-black focus:ring-black focus:border-black"
                     placeholder="xxxxxxxxxx"
                     required
                   />
@@ -147,7 +147,7 @@ const AcpForm = () => {
                 <div>
                   <label
                     htmlFor="equityStack"
-                    className="block my-2 text-sm font-medium"
+                    className="block my-2 text-sm font-medium text-black"
                   >
                     Equity Stake In %<span className="text-red-500">*</span>
                   </label>
@@ -155,7 +155,7 @@ const AcpForm = () => {
                     type="text"
                     name="equityStack"
                     id="equityStack"
-                    className=" border outline-none sm:text-sm rounded-lg block w-full p-2.5  bg-gray  border-color2  placeholder-gray-400  focus:ring-rose-800  focus:border-rose-500"
+                    className="border border-black outline-black text-black sm:text-sm rounded-lg block w-full p-2.5 bg-white placeholder-black focus:ring-black focus:border-black"
                     placeholder="xx.xx"
                     required
                   />
@@ -163,7 +163,7 @@ const AcpForm = () => {
                 <div>
                   <label
                     htmlFor="linkedInURL"
-                    className="block my-2 text-sm font-medium "
+                    className="block my-2 text-sm font-medium text-black"
                   >
                     LinkedIn URL
                     <span className="text-red-500">*</span>
@@ -172,7 +172,7 @@ const AcpForm = () => {
                     type="text"
                     name="linkedInURL"
                     id="linkedInURL"
-                    className=" border outline-none sm:text-sm rounded-lg block w-full p-2.5  bg-gray  border-color2  placeholder-gray-400  focus:ring-rose-800  focus:border-rose-500"
+                    className="border border-black outline-black text-black sm:text-sm rounded-lg block w-full p-2.5 bg-white placeholder-black focus:ring-black focus:border-black"
                     placeholder="https://"
                     required
                   />
@@ -180,7 +180,7 @@ const AcpForm = () => {
                 <div>
                   <label
                     htmlFor="componyName"
-                    className="block my-2 text-sm font-medium "
+                    className="block my-2 text-sm font-medium text-black"
                   >
                     Company Name
                     <span className="text-red-500">*</span>
@@ -189,7 +189,7 @@ const AcpForm = () => {
                     type="text"
                     name="componyName"
                     id="componyName"
-                    className=" border outline-none sm:text-sm rounded-lg block w-full p-2.5  bg-gray  border-color2  placeholder-gray-400  focus:ring-rose-800  focus:border-rose-500"
+                    className="border border-black outline-black text-black sm:text-sm rounded-lg block w-full p-2.5 bg-white placeholder-black focus:ring-black focus:border-black"
                     placeholder="Your products / services / solutions"
                     required
                   />
@@ -197,7 +197,7 @@ const AcpForm = () => {
                 <div>
                   <label
                     htmlFor="companyWebsite"
-                    className="block my-2 text-sm font-medium "
+                    className="block my-2 text-sm font-medium text-black"
                   >
                     Company Website
                     <span className="text-red-500">*</span>
@@ -206,7 +206,7 @@ const AcpForm = () => {
                     type="text"
                     name="companyWebsite"
                     id="companyWebsite"
-                    className=" border outline-none sm:text-sm rounded-lg block w-full p-2.5  bg-gray  border-color2  placeholder-gray-400  focus:ring-rose-800  focus:border-rose-500"
+                    className="border border-black outline-black text-black sm:text-sm rounded-lg block w-full p-2.5 bg-white placeholder-black focus:ring-black focus:border-black"
                     placeholder="Your products / services / solutions"
                     required
                   />
@@ -214,7 +214,7 @@ const AcpForm = () => {
                 <div className="col-span-2">
                   <label
                     htmlFor="founderName"
-                    className="block my-2 text-sm font-medium "
+                    className="block my-2 text-sm font-medium text-black"
                   >
                     List Other Founder&apos;s Full Name. (Separated By Comma)
                     <span className="text-red-500">*</span>
@@ -223,7 +223,7 @@ const AcpForm = () => {
                     type="text"
                     name="founderName"
                     id="founderName"
-                    className=" border outline-none sm:text-sm rounded-lg block w-full p-2.5  bg-gray  border-color2  placeholder-gray-400  focus:ring-rose-800  focus:border-rose-500"
+                    className="border border-black outline-black text-black sm:text-sm rounded-lg block w-full p-2.5 bg-white placeholder-black focus:ring-black focus:border-black"
                     placeholder="Your products / services / solutions"
                     required
                   />
@@ -235,12 +235,12 @@ const AcpForm = () => {
                       aria-describedby="terms"
                       name="terms"
                       type="checkbox"
-                      className="w-4 h-4 border outline-none rounded  focus:ring-3   bg-gray  border-color2  focus:ring-rose-600  ring-offset-gray-800"
+                      className="w-4 h-4 border border-black outline-black text-black rounded focus:ring-3 bg-white focus:ring-black ring-offset-black"
                       required
                     />
                   </div>
                   <div className="ml-3 text-sm">
-                    <label htmlFor="terms" className="font-light   text-gray-">
+                    <label htmlFor="terms" className="font-light text-black">
                       I have reviewed the program qualifications and
                       requirements.
                     </label>
@@ -251,7 +251,7 @@ const AcpForm = () => {
                 <div className="col-span-2">
                   <label
                     htmlFor="productName"
-                    className="block my-2 text-sm font-medium "
+                    className="block my-2 text-sm font-medium text-black"
                   >
                     Name Of Products / Services / Solutions
                     <span className="text-red-500">*</span>
@@ -260,7 +260,7 @@ const AcpForm = () => {
                     rows={3}
                     name="productName"
                     id="productName"
-                    className=" border outline-none sm:text-sm rounded-lg block w-full p-2.5  bg-gray  border-color2  placeholder-gray-400  focus:ring-rose-800  focus:border-rose-500"
+                    className="border border-black outline-black text-black sm:text-sm rounded-lg block w-full p-2.5 bg-white placeholder-black focus:ring-black focus:border-black"
                     placeholder="Your products / services / solutions"
                     required
                   />
@@ -268,7 +268,7 @@ const AcpForm = () => {
                 <div className="col-span-2">
                   <label
                     htmlFor="productDescription"
-                    className="block my-2 text-sm font-medium "
+                    className="block my-2 text-sm font-medium text-black"
                   >
                     Describe about products / services / solutions
                     <span className="text-red-500">*</span>
@@ -277,7 +277,7 @@ const AcpForm = () => {
                     rows={3}
                     name="productDescription"
                     id="productDescription"
-                    className=" border outline-none sm:text-sm rounded-lg block w-full p-2.5  bg-gray  border-color2  placeholder-gray-400  focus:ring-rose-800  focus:border-rose-500"
+                    className="border border-black outline-black text-black sm:text-sm rounded-lg block w-full p-2.5 bg-white placeholder-black focus:ring-black focus:border-black"
                     placeholder="Your products / services / solutions"
                     required
                   />
@@ -285,7 +285,7 @@ const AcpForm = () => {
                 <div className="col-span-2">
                   <label
                     htmlFor="productDemoURL"
-                    className="block my-2 text-sm font-medium "
+                    className="block my-2 text-sm font-medium text-black"
                   >
                     Product Online Demo URL
                     {/* <span className="text-red-500">*</span> */}
@@ -294,14 +294,14 @@ const AcpForm = () => {
                     type="text"
                     name="productDemoURL"
                     id="productDemoURL"
-                    className=" border outline-none sm:text-sm rounded-lg block w-full p-2.5  bg-gray  border-color2  placeholder-gray-400 focus:ring-rose-800  focus:border-rose-500"
+                    className="border border-black outline-black text-black sm:text-sm rounded-lg block w-full p-2.5 bg-white placeholder-black focus:ring-black focus:border-black"
                     placeholder="Your products / services / solutions"
                   />
                 </div>
                 <div>
                   <label
                     htmlFor="employees"
-                    className="block my-2 text-sm font-medium"
+                    className="block my-2 text-sm font-medium text-black"
                   >
                     Number of employees
                     <span className="text-red-500">*</span>
@@ -310,7 +310,7 @@ const AcpForm = () => {
                   <select
                     name="employees"
                     id="employees"
-                    className=" border outline-none sm:text-sm rounded-lg block w-full p-2.5  bg-gray  border-color2  placeholder-gray-400  focus:ring-rose-800  focus:border-rose-500"
+                    className="border border-black outline-black text-black sm:text-sm rounded-lg block w-full p-2.5 bg-white placeholder-black focus:ring-black focus:border-black"
                     required
                   >
                     <option value="1-10">1-10</option>
@@ -322,7 +322,7 @@ const AcpForm = () => {
                 <div>
                   <label
                     htmlFor="isPrimary"
-                    className="block my-2 text-sm font-medium"
+                    className="block my-2 text-sm font-medium text-black"
                   >
                     Will You Primary Contact?
                     <span className="text-red-500">*</span>
@@ -358,12 +358,12 @@ const AcpForm = () => {
                   </div>
                 </div>
                 <div className="col-span-2">
-                  <h2 className="text-lg font-medium border-b border-gray-600 mt-5">
+                  <h2 className="text-lg font-medium border-b border-black mt-5 text-black">
                     Investor&apos;s Details
                   </h2>
                 </div>{" "}
                 <div className="col-span-2">
-                  <p className="mt-2">
+                  <p className="mt-2 text-black">
                     Please list all Investors&apos; details (active and non-active)
                     in your venture according to the specifications below:
                   </p>
@@ -371,7 +371,7 @@ const AcpForm = () => {
                 <div className="col-span-2">
                   <label
                     htmlFor="nameInvestor"
-                    className="block my-2 text-sm font-medium "
+                    className="block my-2 text-sm font-medium text-black"
                   >
                     Name (Individual/Institutional Investor)
                     {/* <span className="text-red-500">*</span> */}
@@ -380,13 +380,13 @@ const AcpForm = () => {
                     type="text"
                     name="nameInvestor"
                     id="nameInvestor"
-                    className=" border outline-none sm:text-sm rounded-lg block w-full p-2.5  bg-gray  border-color2  placeholder-gray-400  focus:ring-rose-800  focus:border-rose-500"
+                    className="border border-black outline-black text-black sm:text-sm rounded-lg block w-full p-2.5 bg-white placeholder-black focus:ring-black focus:border-black"
                   />
                 </div>
                 <div className="col-span-2">
                   <label
                     htmlFor="investmentInINR"
-                    className="block my-2 text-sm font-medium "
+                    className="block my-2 text-sm font-medium text-black"
                   >
                     How Much Investment Was Sought? (Mention The Amount In
                     Indian Rupees)
@@ -396,13 +396,13 @@ const AcpForm = () => {
                     type="text"
                     name="investmentInINR"
                     id="investmentInINR"
-                    className=" border outline-none sm:text-sm rounded-lg block w-full p-2.5  bg-gray  border-color2  placeholder-gray-400  focus:ring-rose-800  focus:border-rose-500"
+                    className="border border-black outline-black text-black sm:text-sm rounded-lg block w-full p-2.5 bg-white placeholder-black focus:ring-black focus:border-black"
                   />
                 </div>
                 <div className="col-span-2">
                   <label
                     htmlFor="investmentTime"
-                    className="block my-2 text-sm font-medium "
+                    className="block my-2 text-sm font-medium text-black"
                   >
                     When The Investment Was Fetched? (State The Date/Month/Year)
                     {/* <span className="text-red-500">*</span> */}
@@ -411,13 +411,13 @@ const AcpForm = () => {
                     type="text"
                     name="investmentTime"
                     id="investmentTime"
-                    className=" border outline-none sm:text-sm rounded-lg block w-full p-2.5  bg-gray  border-color2  placeholder-gray-400  focus:ring-rose-800  focus:border-rose-500"
+                    className="border border-black outline-black text-black sm:text-sm rounded-lg block w-full p-2.5 bg-white placeholder-black focus:ring-black focus:border-black"
                   />
                 </div>
                 <div className="col-span-2">
                   <label
                     htmlFor="otherInvestors"
-                    className="block my-2 text-sm font-medium "
+                    className="block my-2 text-sm font-medium text-black"
                   >
                     List Other Investors Details. (Separated By Comma)
                     {/* <span className="text-red-500">*</span> */}
@@ -426,16 +426,16 @@ const AcpForm = () => {
                     type="text"
                     name="otherInvestors"
                     id="otherInvestors"
-                    className=" border outline-none sm:text-sm rounded-lg block w-full p-2.5  bg-gray  border-color2  placeholder-gray-400  focus:ring-rose-800  focus:border-rose-500"
+                    className="border border-black outline-black text-black sm:text-sm rounded-lg block w-full p-2.5 bg-white placeholder-black focus:ring-black focus:border-black"
                   />
                 </div>
-                <h2 className="text-lg font-medium border-b border-gray-600 mt-5 col-span-2">
+                <h2 className="text-lg font-medium border-b border-black mt-5 col-span-2 text-black">
                   Patent
                 </h2>
                 <div>
                   <label
                     htmlFor="isPatented"
-                    className="block my-2 text-sm font-medium"
+                    className="block my-2 text-sm font-medium text-black"
                   >
                     Does Your Product/Idea Patented?
                     <span className="text-red-500">*</span>
@@ -473,7 +473,7 @@ const AcpForm = () => {
                 <div>
                   <label
                     htmlFor="sourceOfInformation"
-                    className="block my-2 text-sm font-medium"
+                    className="block my-2 text-sm font-medium text-black"
                   >
                     From Where Did You Get Information About The CIVF&apos;s
                     Accelerator Program?
@@ -483,7 +483,7 @@ const AcpForm = () => {
                   <select
                     name="sourceOfInformation"
                     id="sourceOfInformation"
-                    className="border outline-none sm:text-sm rounded-lg block w-full p-2.5  bg-gray  border-color2  placeholder-gray-400  focus:ring-rose-800  focus:border-rose-500"
+                    className="border border-black outline-black text-black sm:text-sm rounded-lg block w-full p-2.5 bg-white placeholder-black focus:ring-black focus:border-black"
                     required
                   >
                     <option value="LinkedIn">LinkedIn</option>
@@ -493,13 +493,13 @@ const AcpForm = () => {
                     <option value="Facebook">Facebook</option>
                   </select>
                 </div>
-                <h2 className="text-lg font-medium border-b border-gray-600 mt-5 col-span-2">
+                <h2 className="text-lg font-medium border-b border-black mt-5 col-span-2 text-black">
                   Pitch Desk
                 </h2>
                 <div className="col-span-2">
                   <label
                     htmlFor="pitchDesk"
-                    className="block my-2 text-sm font-medium "
+                    className="block my-2 text-sm font-medium text-black"
                   >
                     Upload Your Pitch Desk
                     <span className="text-red-500">*</span>
@@ -508,7 +508,7 @@ const AcpForm = () => {
                     type="file"
                     name="pitchDesk"
                     id="pitchDesk"
-                    className="border bg-white outline-none sm:text-sm rounded-lg block w-full p-2.5  bg-gray  border-color2  placeholder-gray-400  focus:ring-rose-800  focus:border-rose-500"
+                    className="border border-black outline-black text-black sm:text-sm rounded-lg block w-full p-2.5 bg-white placeholder-black focus:ring-black focus:border-black"
                     required
                   />
                 </div>
@@ -516,11 +516,11 @@ const AcpForm = () => {
               </div>
 
               {/*  */}
-              <p>
+              <p className='text-black'>
                 I Accept CIVF&apos;s Application Terms & Conditions And The Company&apos;s
                 Privacy Policy{" "}
               </p>
-              <p className="text-sm">
+              <p className="text-sm text-black">
                 By checking this box I accept the CIVF&apos;s Accelerator programme&apos;s
                 Application Terms & Conditions and I give my consent to CIVF to
                 process my personal data in accordance with the Company&apos;s
@@ -535,12 +535,12 @@ const AcpForm = () => {
                     id="terms2"
                     aria-describedby="terms2"
                     type="checkbox"
-                    className="w-4 h-4 border outline-none rounded  focus:ring-3   bg-gray  border-color2  focus:ring-rose-600  ring-offset-gray-800"
+                    className="w-4 h-4 border border-black outline-black text-black rounded focus:ring-3 bg-white focus:ring-black ring-offset-black"
                     required
                   />
                 </div>
                 <div className="ml-3 text-sm">
-                  <label htmlFor="terms2" className="">
+                  <label htmlFor="terms2" className="text-black">
                     I Accept
                   </label>
                 </div>
