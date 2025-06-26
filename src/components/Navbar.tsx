@@ -106,7 +106,7 @@ export default function Navbar() {
               <Link href="/contact" className="block px-4 py-2 hover:bg-orange-500">
                 Contact Us
               </Link>
-              <Link href="/faqs" className="block px-4 py-2 hover:bg-orange-500">
+              <Link href="/faq" className="block px-4 py-2 hover:bg-orange-500">
                 FAQs
               </Link>
               <Link href="/gallery" className="block px-4 py-2 hover:bg-orange-500">
