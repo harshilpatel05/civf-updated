@@ -84,10 +84,10 @@ export default function Navbar() {
           </button>
           {isCivfDropdownOpen && (
             <div className="absolute bg-blue-900 w-48 shadow-lg mt-1 z-10">
-              <Link href="/services/industries" className="block px-4 py-2 hover:bg-orange-500">
+              <Link href="/industries" className="block px-4 py-2 hover:bg-orange-500">
                 For Industries
               </Link>
-              <Link href="/services/academia" className="block px-4 py-2 hover:bg-orange-500">
+              <Link href="/academia" className="block px-4 py-2 hover:bg-orange-500">
                 For Academia
               </Link>
             </div>
