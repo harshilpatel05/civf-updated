@@ -3,7 +3,6 @@ import { getDbAndBucket } from '@/utils/mongodb';
 
 // Reduced limits for serverless deployment compatibility
 const MAX_FILE_SIZE = 4 * 1024 * 1024; // 4MB for serverless compatibility
-const ALLOWED_VIDEO_TYPES = ['video/mp4', 'video/webm', 'video/ogg', 'video/quicktime'];
 
 export async function GET() {
   try {

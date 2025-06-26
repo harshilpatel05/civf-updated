@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 type Testimonial = {
   _id: string;
@@ -13,8 +13,8 @@ type Testimonial = {
 // TypeScript: declare window.YT and window.onYouTubeIframeAPIReady
 declare global {
   interface Window {
-    YT: any;
-    onYouTubeIframeAPIReady: any;
+    YT: unknown;
+    onYouTubeIframeAPIReady: unknown;
   }
 }
 
