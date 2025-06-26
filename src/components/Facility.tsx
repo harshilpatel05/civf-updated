@@ -129,6 +129,26 @@ export default function Facility() {
             </div>
             </div>
             </div>
+            <div>
+            <h1 className='text-center text-2xl font-bold text-black pt-10 pb-0'>Digital Media Center</h1>
+        </div>
+        <div className="flex flex-row justify-center items-center">
+            <div className='p-5'>
+                <Image className="rounded-xl h-60" src="/Benefits/Facilities/dmc/1.jpg" alt="Co-Working Space" width={500} height={500}/>
+            </div>
+            <div className='p-5'>
+                <Image className="rounded-xl w-190 h-60 object-cover" src="/Benefits/Facilities/dmc/2.jpg" alt="Co-Working Space" width={500} height={500}/>
+            </div>
+            
+        </div>
+        <div className="flex flex-row justify-center items-center">
+        <div className='p-5'>
+                <Image className="rounded-xl w-190 h-60 object-cover" src="/Benefits/Facilities/dmc/3.jpg" alt="Co-Working Space" width={500} height={500}/>
+            </div>
+            <div className='p-5'>
+                <Image className="rounded-xl h-60" src="/Benefits/Facilities/dmc/4.jpg" alt="Co-Working Space" width={500} height={500}/>
+            </div>     
+        </div>
             </div>
     )
 }
