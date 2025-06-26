@@ -1,9 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getDbAndBucket } from '@/utils/mongodb';
 
-// Reduced limits for serverless deployment compatibility
-const MAX_FILE_SIZE = 4 * 1024 * 1024; // 4MB for serverless compatibility
-
 export async function GET() {
   try {
     const { db } = await getDbAndBucket('testimonials');
