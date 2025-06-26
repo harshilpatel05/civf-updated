@@ -5,6 +5,8 @@ import Link from 'next/link';
 export default function Navbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isBenefitsDropdownOpen, setIsBenefitsDropdownOpen] = useState(false);
+  const [isCivfDropdownOpen, setIsCivfDropdownOpen] = useState(false);
+  const [isContactDropdownOpen, setIsContactDropdownOpen] = useState(false);
 
   const toggleDropdown = () => {
     setIsDropdownOpen(prev => !prev);
@@ -14,9 +16,20 @@ export default function Navbar() {
     setIsBenefitsDropdownOpen(prev => !prev);
   };
 
+  const toggleCivfDropdown = () => {
+    setIsCivfDropdownOpen(prev => !prev);
+  };
+
+  const toggleContactDropdown = () => {
+    setIsContactDropdownOpen(prev => !prev);
+  };
+
   return (
     <div>
+      
       <nav className="flex bg-blue-900 w-full justify-center flex-wrap text-white text-base relative">
+      <Link href="/" className="bg-blue-900 hover:bg-orange-500 transition p-3">Home</Link>
+      <Link href="/" className="bg-blue-900 hover:bg-orange-500 transition p-3">Our Supporters</Link>
         <Link href="/aboutUs" className="bg-blue-900 hover:bg-orange-500 transition p-3">About Us</Link>
 
         <div className="relative">
@@ -54,7 +67,7 @@ export default function Navbar() {
               <Link href="/facilities" className="block px-4 py-2 hover:bg-orange-500">
                 Facilities
               </Link>
-              <Link href="/benefits" className="block px-4 py-2 hover:bg-orange-500">
+              <Link href="/services" className="block px-4 py-2 hover:bg-orange-500">
                 Services
               </Link>
             </div>
@@ -62,9 +75,46 @@ export default function Navbar() {
         </div>
 
         <Link href="/" className="bg-blue-900 hover:bg-orange-500 transition p-3">Start-Up Portfolio</Link>
-        <Link href="/" className="bg-blue-900 hover:bg-orange-500 transition p-3">CIVF Services</Link>
-        <Link href="/" className="bg-blue-900 hover:bg-orange-500 transition p-3">Career at CIVF</Link>
-        <Link href="/" className="bg-blue-900 hover:bg-orange-500 transition p-3">Contact</Link>
+        <div className="relative">
+          <button
+            onClick={toggleCivfDropdown}
+            className="bg-blue-900 flex hover:bg-orange-500 transition p-3 text-white"
+          >
+            CIVF Services <div className='scale-80 px-1'>▼</div>
+          </button>
+          {isCivfDropdownOpen && (
+            <div className="absolute bg-blue-900 w-48 shadow-lg mt-1 z-10">
+              <Link href="/services/industries" className="block px-4 py-2 hover:bg-orange-500">
+                For Industries
+              </Link>
+              <Link href="/services/academia" className="block px-4 py-2 hover:bg-orange-500">
+                For Academia
+              </Link>
+            </div>
+          )}
+        </div>
+        <Link href="/career" className="bg-blue-900 hover:bg-orange-500 transition p-3">Career at CIVF</Link>
+        <div className="relative">
+          <button
+            onClick={toggleContactDropdown}
+            className="bg-blue-900 flex hover:bg-orange-500 transition p-3 text-white"
+          >
+            Contact <div className='scale-80 px-1'>▼</div>
+          </button>
+          {isContactDropdownOpen && (
+            <div className="absolute bg-blue-900 w-48 shadow-lg mt-1 z-10">
+              <Link href="/contact" className="block px-4 py-2 hover:bg-orange-500">
+                Contact Us
+              </Link>
+              <Link href="/faqs" className="block px-4 py-2 hover:bg-orange-500">
+                FAQs
+              </Link>
+              <Link href="/gallery" className="block px-4 py-2 hover:bg-orange-500">
+                Gallery
+              </Link>
+            </div>
+          )}
+        </div>
       </nav>
     </div>
   );
