@@ -56,7 +56,7 @@ export default function AccFeatures() {
               <h1 className="text-white text-2xl font-bold mt-3 text-center drop-shadow">
                 Hands On Support
                 </h1>
-              <p className="text-center font-semibold text-sm sm:text-base max-w-[90%] break-words">We'll work together on your business and product strategy, growth metrics and investor pitches.</p>
+              <p className="text-center font-semibold text-sm sm:text-base max-w-[90%] break-words">We&apos;ll work together on your business and product strategy, growth metrics and investor pitches.</p>
             </div>
           </div>
 
@@ -71,7 +71,7 @@ export default function AccFeatures() {
               <h1 className="text-white text-2xl font-bold mt-3 text-center drop-shadow">
                 Network
               </h1>
-              <p className="text-center font-semibold text-sm sm:text-base max-w-[90%] break-words">You'll have access to several founders, mentors and our own staff. Thanks to our massive network, businesses can build relationships and partnerships that wouldn't be possible at their size without CIVF.</p>
+              <p className="text-center font-semibold text-sm sm:text-base max-w-[90%] break-words">You&apos;ll have access to several founders, mentors and our own staff. Thanks to our massive network, businesses can build relationships and partnerships that wouldn&apos;t be possible at their size without CIVF.</p>
             </div>
           </div>
 
@@ -86,7 +86,7 @@ export default function AccFeatures() {
               <h1 className="text-white text-2xl font-bold mt-3 text-center drop-shadow">
                   Money
               </h1>
-              <p className="text-center font-semibold text-sm sm:text-base max-w-[90%] break-words">CIVF's network will help you connect with investors.</p>
+              <p className="text-center font-semibold text-sm sm:text-base max-w-[90%] break-words">CIVF&apos;s network will help you connect with investors.</p>
             </div>
           </div>
         </div>
