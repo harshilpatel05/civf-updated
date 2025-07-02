@@ -1,5 +1,6 @@
+//Frontend for the form under Accelaration Page, The backend for this needs to be re-written as currently this
+//has been copied directly from the old repository
 'use client';
-
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment, useRef, useState } from 'react';
 import { toast } from 'sonner';

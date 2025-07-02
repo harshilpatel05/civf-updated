@@ -1,29 +1,24 @@
 'use client';
 import { useState, useEffect } from 'react';
-
 type Member = {
   _id: string;
   name: string;
   position: string;
 };
-
-export default function Admin() {
+export default function MembersUpload() {
   const [name, setName] = useState('');
   const [image, setImage] = useState<File | null>(null);
   const [position, setPosition] = useState('');
   const [message, setMessage] = useState('');
   const [members, setMembers] = useState<Member[]>([]);
-
   useEffect(() => {
     fetchMembers();
   }, []);
-
   const fetchMembers = async () => {
     const res = await fetch('/api/members');
     const data = await res.json();
     setMembers(data);
   };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!image) {
@@ -34,12 +29,10 @@ export default function Admin() {
     formData.append('name', name);
     formData.append('image', image);
     formData.append('position', position);
-
     const res = await fetch('/api/members', {
       method: 'POST',
       body: formData,
     });
-
     const result = await res.json();
     if (res.ok) {
       setMessage(`Uploaded: ${result._id}`);
@@ -51,7 +44,6 @@ export default function Admin() {
       setMessage('Upload failed');
     }
   };
-
   const handleDelete = async (_id: string) => {
     const confirmed = confirm('Are you sure you want to delete this member?');
     if (!confirmed) return;
@@ -65,7 +57,6 @@ export default function Admin() {
       setMessage('Failed to delete');
     }
   };
-
   return (
     <div className="flex justify-center">
       <div className="justify-center mt-12 text-black bg-white p-6 rounded-xl shadow-lg">
@@ -81,7 +72,6 @@ export default function Admin() {
               required
               className="w-full p-2 border text-black placeholder-black border-gray-300 rounded"
             />
-
             <input
               type="text"
               placeholder="Position"
@@ -90,7 +80,6 @@ export default function Admin() {
               required
               className="w-full p-2 text-black placeholder-black border border-gray-300 rounded"
             />
-
             <input
               type="file"
               accept="image/*"
@@ -98,17 +87,13 @@ export default function Admin() {
               required
               className="w-full p-2 placeholder-black text-black border border-gray-300 rounded"
             />
-
             <button
               type="submit"
-              className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700 transition"
-            >
+              className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700 transition">
               Upload
             </button>
-
             {message && <p className="text-sm text-center mt-2">{message}</p>}
           </form>
-
           <div className="w-100 max-h-[400px] overflow-y-auto border rounded p-4">
             <h2 className="text-xl font-semibold mb-4">Existing Members</h2>
             {members.length === 0 ? (
@@ -126,8 +111,7 @@ export default function Admin() {
                     </div>
                     <button
                       onClick={() => handleDelete(member._id)}
-                      className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
-                    >
+                      className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">
                       Delete
                     </button>
                   </li>

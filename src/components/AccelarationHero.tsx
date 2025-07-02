@@ -1,8 +1,8 @@
-'use client';
+//Frontend for first section of Accelaration Page.
 
+'use client';
 import React from 'react';
 import Image from 'next/image';
-
 const AccelarationHero = () => {
   return (
     <section className="pt-16 bg-color7 bg-gradient-to-tr from-blue-900 to-orange-500">

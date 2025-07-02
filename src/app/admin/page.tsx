@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import Admin from '@/components/Admin';
+import MembersUpload from '@/components/MembersUpload';
 import NewsUploadPage from '@/components/News';
 import Sarthi from '@/components/Sarthi';
 import UploadEvent from '@/components/EventUpload';
@@ -12,14 +12,29 @@ export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [inputPassword, setInputPassword] = useState('');
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (inputPassword === 'civf2025') {
+const handleLogin = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  try {
+    const res = await fetch('/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: inputPassword }),
+    });
+
+    const data = await res.json();
+
+    if (res.ok && data.success) {
       setIsAuthenticated(true);
     } else {
-      alert('Incorrect password');
+      alert(data.message || 'Incorrect password');
     }
-  };
+  } catch (error) {
+    console.error('Login failed:', error);
+    alert('Something went wrong. Please try again.');
+  }
+};
+
 
   if (!isAuthenticated) {
     return (
@@ -48,7 +63,7 @@ export default function AdminPage() {
     <div className='bg-blue-900'>
       <div className=''>
       <h1 className="text-4xl font-bold text-center p-5 pb-0">Board of Directors</h1>
-      <Admin />
+      <MembersUpload />
       <h1 className="text-4xl font-bold text-center p-5 pb-0">CIVF SARTHI</h1>
       <Sarthi />
       <h1 className="text-4xl font-bold text-center p-5 pb-0">Announcements</h1>

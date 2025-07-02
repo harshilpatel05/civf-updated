@@ -6,6 +6,14 @@ import Header from './Header';
 
 export default function Hero() {
   const data = [
+    { number: '45+', title: 'Startups Incubated', color: 'sky' },
+    { number: '₹1.4 Cr+', title: 'Grant Disbursed', color: 'rose' },
+    { number: '12+', title: 'Social Innovations', color: 'yellow' },
+    { number: '30+', title: 'Patents Filed', color: 'green' },
+    { number: '41', title: 'Industry Mentors', color: 'blue' },
+    { number: '800+', title: 'Donors', color: 'purple' },
+    { number: '6', title: 'VC Firms', color: 'pink' },
+    { number: '10', title: 'Corporate Partners', color: 'sky' },
     { number: '9987', title: 'Awareness Programs', color: 'sky' },
     { number: '436', title: 'Expert Talks', color: 'rose' },
     { number: '481', title: 'Project Supported', color: 'yellow' },
@@ -13,14 +21,7 @@ export default function Hero() {
     { number: '136', title: 'Sanctioned for Financial Support', color: 'blue' },
     { number: '42', title: 'Eligible for Seed Money', color: 'purple' },
     { number: '29', title: 'Companies Registered', color: 'pink' },
-    { number: '45+', title: 'Startups Incubated', color: 'sky' },
-    { number: '₹1.4 Cr+', title: 'Grant Disbursed', color: 'rose' },
-    { number: '12+', title: 'Social Innovations', color: 'yellow' },
-    { number: '30+', title: 'Patents Filed', color: 'green' },
-    { number: '41', title: 'Industry Mentors', color: 'blue' },
-    { number: '17', title: 'Angel Investors', color: 'purple' },
-    { number: '6', title: 'VC Firms', color: 'pink' },
-    { number: '10', title: 'Corporate Partners', color: 'sky' },
+   
   ];
 
   const colorMap: Record<string, string> = {
