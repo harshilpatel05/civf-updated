@@ -1,10 +1,8 @@
 'use client';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { toast } from 'sonner';
 
 export default function AccelarationForm() {
-  const [id, setId] = useState('');
-  const [submitted, setSubmitted] = useState(false);
   const validator = (phone: string, equity: string) => {
     if (phone.length !== 10) return false;
     const eq = Number(equity);
@@ -42,8 +40,6 @@ export default function AccelarationForm() {
       }
 
       const { data: id } = await res.json();
-      setId(id);
-      setSubmitted(true);
       (document.getElementById('frm') as HTMLFormElement).reset();
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : 'Unknown error';
