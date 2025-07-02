@@ -1,5 +1,4 @@
 'use client';
-import { useState } from 'react';
 import { toast } from 'sonner';
 
 export default function AccelarationForm() {
@@ -39,7 +38,6 @@ export default function AccelarationForm() {
         return;
       }
 
-      const { data: id } = await res.json();
       (document.getElementById('frm') as HTMLFormElement).reset();
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : 'Unknown error';
@@ -269,7 +267,7 @@ export default function AccelarationForm() {
               {/* T&C Consent */}
               <div className="mt-5">
                 <p className="text-black">
-                  I accept CIVF's terms and privacy policy. I confirm that I have
+                  I accept CIVF&apos;s terms and privacy policy. I confirm that I have
                   permission to share third-party data where provided.
                 </p>
                 <div className="flex items-start mt-2">
