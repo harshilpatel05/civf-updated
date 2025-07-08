@@ -299,7 +299,6 @@ export default function AccelarationForm() {
                   </div>
                 </div>
 
-                {/* Submit */}
                 <button
                   type="submit"
                   className={`w-full bg-rose-600 hover:bg-rose-700 text-white font-medium rounded-lg text-sm px-5 py-2.5 mt-4 flex items-center justify-center ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
@@ -319,7 +318,6 @@ export default function AccelarationForm() {
                 </button>
               </form>
 
-              {/* Status Check Button */}
               <div className="text-center mt-6 pt-6 border-t border-gray-200">
                 <p className="text-sm text-gray-600 mb-3">Already applied? Check your application status</p>
                 <button
