@@ -1,6 +1,8 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Header from '@/components/Header';
+import Navbar from '@/components/Navbar';
 
 type Application = {
   _id: string;
@@ -80,16 +82,17 @@ export default function ApplicationStatus() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
+    <div>
+      <Header />
+      <Navbar />
+    <div className="min-h-screen flex flex-col justify-center items-center bg-white py-12">
       <div className="max-w-4xl mx-auto px-4">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-black mb-2">Application Status Check</h1>
+        <div className="text-center">
+          <h1 className="text-3xl font-bold text-black mb-2">CIVF Application Status Check</h1>
           <p className="text-black">Enter your reference number to check your application status</p>
         </div>
 
-        {/* Status Check Form */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+        <div className="bg-white w-200 py-20 rounded-lg shadow-2xl p-6">
           <form onSubmit={handleStatusCheck} className="max-w-md mx-auto">
             <div className="mb-4">
               <label htmlFor="referenceNumber" className="block text-sm font-medium text-black mb-2">
@@ -101,7 +104,7 @@ export default function ApplicationStatus() {
                 value={referenceNumber}
                 onChange={(e) => setReferenceNumber(e.target.value)}
                 placeholder="Enter your reference number"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-black"
+                className="w-full px-3 py-2 placeholder-black border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-black"
                 required
               />
             </div>
@@ -207,6 +210,7 @@ export default function ApplicationStatus() {
           </button>
         </div>
       </div>
+    </div>
     </div>
   );
 } 

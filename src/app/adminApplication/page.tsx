@@ -52,7 +52,6 @@ export default function AdminApplication(){
                     </button>
                 </div>
             </div>
-            
             <Applications />
         </div>
     )
