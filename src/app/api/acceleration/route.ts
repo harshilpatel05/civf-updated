@@ -105,36 +105,42 @@ export async function POST(req: Request) {
       }
     }
     const uuid = uuidv4();
-    let emailBody = 'Thank you for your submission to the CIVF Acceleration Program.\n\n';
-    emailBody += `\n\nYour Application Reference ID: ${uuid}\n`;
-    emailBody += 'We have received your application with the following details:\n\n';
-    emailBody += `First Name: ${firstName}\n`;
-    emailBody += `Last Name: ${lastName}\n`;
-    emailBody += `Email: ${email}\n`;
-    emailBody += `Phone: ${phone}\n`;
-    emailBody += `Equity Stake: ${equityStack}\n`;
-    emailBody += `LinkedIn URL: ${linkedInURL}\n`;
-    emailBody += `Company Name: ${companyName}\n`;
-    emailBody += `Company Website: ${companyWebsite}\n`;
-    emailBody += `Other Founders: ${coFounder}\n`;
-    emailBody += `Product/Service Name: ${productName}\n`;
-    emailBody += `Product/Service Description: ${productDescription}\n`;
-    emailBody += `Product Demo URL: ${productDemoURL}\n`;
-    emailBody += `Number of Employees: ${employees}\n`;
-    emailBody += `Primary Contact: ${isPrimary === 'Yes' ? 'Yes' : 'No'}\n`;
-    if (nameInvestor && nameInvestor.trim() !== '') {
-      emailBody += `Investor Name: ${nameInvestor}\n`;
-    }
-    if (investmentInINR && investmentInINR.trim() !== '') {
-      emailBody += `Investment Amount (INR): ${investmentInINR}\n`;
-    }
-    if (investmentTime && investmentTime.trim() !== '') {
-      emailBody += `Investment Time: ${investmentTime}\n`;
-    }
-    if (otherInvestors && otherInvestors.trim() !== '') {
-      emailBody += `Other Investors: ${otherInvestors}\n`;
-    }
-    emailBody += '\n\nIf you have any questions, please reply to this email.';
+    const emailBody = `
+    <div style="font-family: Arial, sans-serif; font-size: 14px; color: #333; line-height: 1.6;">
+      <p>Thank you for your submission to the <strong>CIVF Acceleration Program</strong>.</p>
+  
+      <p><strong>Your Application Reference ID:</strong> ${uuid}</p>
+  
+      <p>We have received your application with the following details:</p>
+  
+      <ul style="list-style: none; padding: 0;">
+        <li><strong>First Name:</strong> ${firstName}</li>
+        <li><strong>Last Name:</strong> ${lastName}</li>
+        <li><strong>Email:</strong> ${email}</li>
+        <li><strong>Phone:</strong> ${phone}</li>
+        <li><strong>Equity Stake:</strong> ${equityStack}%</li>
+        <li><strong>LinkedIn URL:</strong> <a href="${linkedInURL}" target="_blank">${linkedInURL}</a></li>
+        <li><strong>Company Name:</strong> ${companyName}</li>
+        <li><strong>Company Website:</strong> <a href="${companyWebsite}" target="_blank">${companyWebsite}</a></li>
+        <li><strong>Other Founders:</strong> ${coFounder}</li>
+        <li><strong>Product/Service Name:</strong> ${productName}</li>
+        <li><strong>Product/Service Description:</strong> ${productDescription}</li>
+        <li><strong>Product Demo URL:</strong> <a href="${productDemoURL}" target="_blank">${productDemoURL}</a></li>
+        <li><strong>Number of Employees:</strong> ${employees}</li>
+        <li><strong>Primary Contact:</strong> ${isPrimary === 'Yes' ? 'Yes' : 'No'}</li>
+  
+        ${nameInvestor && nameInvestor.trim() !== '' ? `<li><strong>Investor Name:</strong> ${nameInvestor}</li>` : ''}
+        ${investmentInINR && investmentInINR.trim() !== '' ? `<li><strong>Investment Amount (INR):</strong> ${investmentInINR}</li>` : ''}
+        ${investmentTime && investmentTime.trim() !== '' ? `<li><strong>Investment Time:</strong> ${investmentTime}</li>` : ''}
+        ${otherInvestors && otherInvestors.trim() !== '' ? `<li><strong>Other Investors:</strong> ${otherInvestors}</li>` : ''}
+      </ul>
+  
+      <p>If you have any questions, please reply to this email.</p>
+  
+      <p>Best regards,<br><strong>CIVF Team</strong></p>
+    </div>
+  `;
+  
     const applicationData: Record<string, unknown> = {
       firstName,
       lastName,
@@ -181,9 +187,8 @@ export async function POST(req: Request) {
     const mailOptions = {
       from: process.env.MAIL_FROM || process.env.SMTP_USER,
       to: email, 
-      cc: process.env.MAIL_TO,
       subject: `Received Acceleration Form Submission from ${firstName} ${lastName}`,
-      text: emailBody,
+      html: emailBody,
     };
 
     await transporter.sendMail(mailOptions);
