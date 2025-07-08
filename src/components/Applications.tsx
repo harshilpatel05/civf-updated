@@ -1,6 +1,11 @@
 'use client'
 import { useState, useEffect } from "react";
 
+type FileMeta = {
+  fileId: string;
+  filename?: string;
+};
+
 type Applications = {
         _id:string,
         firstName: string,
@@ -23,7 +28,7 @@ type Applications = {
         otherInvestors: string, 
         investmentInINR?: string,
         investmentTime?: string,
-        files?: any[],
+        files?: FileMeta[],
         createdAt?: Date,
 }
 

@@ -5,7 +5,7 @@ import { getDbAndBucket } from '@/utils/mongodb';
 import { Readable } from 'node:stream';
 
 type FileMeta = { field: string; filename: string; fileId: unknown };
-export async function GET(req:Request){
+export async function GET(){
   try{
     const {db} = await getDbAndBucket('applications');
     const applications = await db.collection('applications').find().toArray()

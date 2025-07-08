@@ -2,9 +2,35 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
+type Application = {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  equityStack: string;
+  linkedIn: string;
+  companyName: string;
+  companyWebsite: string;
+  coFounder: string;
+  productName: string;
+  productDescription: string;
+  productDemoURL: string;
+  employees: string;
+  isPrimary: string;
+  uuid: string;
+  status: string;
+  nameInvestor: string;
+  otherInvestors: string;
+  investmentInINR?: string;
+  investmentTime?: string;
+  files?: { fileId: string; filename?: string }[];
+  createdAt?: Date;
+};
+
 export default function ApplicationStatus() {
   const [referenceNumber, setReferenceNumber] = useState('');
-  const [application, setApplication] = useState<any>(null);
+  const [application, setApplication] = useState<Application | null>(null); // Replace 'any' with a more specific type if possible
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const router = useRouter();
@@ -27,14 +53,14 @@ export default function ApplicationStatus() {
       }
 
       const applications = await response.json();
-      const foundApplication = applications.find((app: any) => app.uuid === referenceNumber.trim());
+      const foundApplication = applications.find((app: Application) => app.uuid === referenceNumber.trim()); // Replace 'any' with a more specific type if possible
 
       if (foundApplication) {
         setApplication(foundApplication);
       } else {
         setError('No application found with this reference number. Please check and try again.');
       }
-    } catch (err) {
+    } catch {
       setError('Failed to check application status. Please try again.');
     } finally {
       setLoading(false);
