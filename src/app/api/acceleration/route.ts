@@ -5,7 +5,41 @@ import { getDbAndBucket } from '@/utils/mongodb';
 import { Readable } from 'node:stream';
 
 type FileMeta = { field: string; filename: string; fileId: unknown };
-
+export async function GET(req:Request){
+  try{
+    const {db} = await getDbAndBucket('applications');
+    const applications = await db.collection('applications').find().toArray()
+    return NextResponse.json(
+      applications.map((doc)=>({
+        _id:String(doc._id),
+        firstName: doc.firstName,
+        lastName: doc.lastName,
+        email: doc.email,
+        phone: doc.phone,
+        equityStack: doc.equityStack,
+        linkedIn: doc.linkedInURL,
+        companyName: doc.companyName,
+        companyWebsite: doc.companyWesbite,
+        coFounder: doc.founderName,
+        productName: doc.productName,
+        productDescription: doc.productDescription,
+        productDemoURL: doc.productDemoURL,
+        employees: doc.employees,
+        isPrimary: doc.isPrimary,
+        uuid: doc.uuid,
+        status: doc.status,
+        nameInvestor: doc.nameInvestor,
+        otherInvestors: doc.otherInvestors, 
+        file: {
+          _id: doc.file?._id ? String(doc.file._id) : '',
+        },
+      }))
+    );
+  }catch(err){
+    console.error(err);
+    return new NextResponse('Failed to fetch applications')
+  }
+}
 export async function POST(req: Request) {
   try {
     const contentType = req.headers.get('content-type') || '';
@@ -22,8 +56,7 @@ export async function POST(req: Request) {
     const linkedInURL = formData.get('linkedInURL') as string;
     const companyName = formData.get('componyName') as string;
     const companyWebsite = formData.get('companyWebsite') as string;
-    const founderName = formData.get('founderName') as string;
-    const terms = formData.get('terms') as string;
+    const coFounder = formData.get('founderName') as string;
     const productName = formData.get('productName') as string;
     const productDescription = formData.get('productDescription') as string;
     const productDemoURL = formData.get('productDemoURL') as string;
@@ -83,7 +116,7 @@ export async function POST(req: Request) {
     emailBody += `LinkedIn URL: ${linkedInURL}\n`;
     emailBody += `Company Name: ${companyName}\n`;
     emailBody += `Company Website: ${companyWebsite}\n`;
-    emailBody += `Other Founders: ${founderName}\n`;
+    emailBody += `Other Founders: ${coFounder}\n`;
     emailBody += `Product/Service Name: ${productName}\n`;
     emailBody += `Product/Service Description: ${productDescription}\n`;
     emailBody += `Product Demo URL: ${productDemoURL}\n`;
@@ -111,8 +144,7 @@ export async function POST(req: Request) {
       linkedInURL,
       companyName,
       companyWebsite,
-      founderName,
-      terms,
+      coFounder,
       productName,
       productDescription,
       productDemoURL,
@@ -155,7 +187,7 @@ export async function POST(req: Request) {
     };
 
     await transporter.sendMail(mailOptions);
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true, uuid: uuid });
   } catch (error) {
     console.error(error);
     return new NextResponse('Failed to send email', { status: 500 });

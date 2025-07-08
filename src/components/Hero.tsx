@@ -7,7 +7,7 @@ import Header from './Header';
 export default function Hero() {
   const data = [
     { number: '45+', title: 'Startups Incubated', color: 'sky' },
-    { number: '₹1.4 Cr+', title: 'Grant Disbursed', color: 'rose' },
+    { number: '₹8.4 Cr+', title: 'Grant Disbursed', color: 'rose' },
     { number: '12+', title: 'Social Innovations', color: 'yellow' },
     { number: '30+', title: 'Patents Filed', color: 'green' },
     { number: '41', title: 'Industry Mentors', color: 'blue' },

@@ -1,11 +1,11 @@
 import React from "react";
 import AccelarationHero from "@/components/AccelarationHero";
 import AccFeatures from "@/components/AccFeatures";
-import AcpForm from "@/components/AcpForm";
 import Flow from "@/components/Flow";
 import Header from "@/components/Header";
 import Contact from "@/components/Contact";
 import Navbar from "@/components/Navbar";
+import AccelarationForm from "@/components/AccelerationForm";
 const acceleration = () => {
   return (
     <div>
@@ -21,7 +21,7 @@ const acceleration = () => {
         <Flow />
       </section>
       <section id="form">
-        <AcpForm />
+        <AccelarationForm/>
       </section>
       <Contact/>
     </div>

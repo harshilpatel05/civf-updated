@@ -51,6 +51,9 @@ export default function Navbar() {
               <Link href="/accelaration-program#form" className="block px-4 py-2 hover:bg-orange-500">
                 Apply to Program
               </Link>
+              <Link href="/application-status" className="block px-4 py-2 hover:bg-orange-500">
+                Check Application Status
+              </Link>
             </div>
           )}
         </div>

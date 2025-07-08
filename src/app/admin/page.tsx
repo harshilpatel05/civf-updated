@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import MembersUpload from '@/components/MembersUpload';
 import NewsUploadPage from '@/components/News';
 import Sarthi from '@/components/Sarthi';
@@ -8,77 +8,77 @@ import ClientTestimonialsAdmin from '@/components/ClientTestimonialsAdmin';
 import AnnouncementUpload from '@/components/AnnouncementUpload';
 import StartupAdmin from '@/components/StartupAdmin';
 import GalleryAdmin from '@/components/GalleryAdmin';
+import LoginForm from '@/components/LoginForm';
+
 export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [inputPassword, setInputPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
 
-const handleLogin = async (e: React.FormEvent) => {
-  e.preventDefault();
-
-  try {
-    const res = await fetch('/api/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ password: inputPassword }),
-    });
-
-    const data = await res.json();
-
-    if (res.ok && data.success) {
+  useEffect(() => {
+    // Check if user is already logged in from localStorage
+    const loginStatus = localStorage.getItem('adminLoggedIn');
+    if (loginStatus === 'true') {
       setIsAuthenticated(true);
-    } else {
-      alert(data.message || 'Incorrect password');
     }
-  } catch (error) {
-    console.error('Login failed:', error);
-    alert('Something went wrong. Please try again.');
-  }
-};
+    setIsLoading(false);
+  }, []);
 
+  const handleLogin = (success: boolean) => {
+    if (success) {
+      localStorage.setItem('adminLoggedIn', 'true');
+    }
+    setIsAuthenticated(success);
+  };
 
-  if (!isAuthenticated) {
+  const handleLogout = () => {
+    localStorage.removeItem('adminLoggedIn');
+    setIsAuthenticated(false);
+  };
+
+  if (isLoading) {
     return (
-      <div className="flex flex-col text-black items-center justify-center min-h-screen bg-gray-100 p-4">
-        <h1 className="text-3xl font-bold text-center mb-4">Admin Login</h1>
-        <form onSubmit={handleLogin} className="space-y-4 justify-center">
-          <input
-            type="password"
-            placeholder="Enter password"
-            className="px-4 py-2 border text-black rounded w-full"
-            value={inputPassword}
-            onChange={(e) => setInputPassword(e.target.value)}
-          />
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-          >
-            Login
-          </button>
-        </form>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-black">Loading...</div>
       </div>
     );
   }
 
+  if (!isAuthenticated) {
+    return <LoginForm onLogin={handleLogin} />;
+  }
+
   return (
-    <div className='bg-blue-900'>
+    <div className='bg-blue-900 min-h-screen'>
+      {/* Header with logout button */}
+      <div className="bg-white shadow-sm border-b">
+        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+          <h1 className="text-xl font-semibold text-black">CIVF Admin Panel</h1>
+          <button
+            onClick={handleLogout}
+            className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg shadow-sm text-sm font-medium"
+          >
+            Logout
+          </button>
+        </div>
+      </div>
+
       <div className=''>
-      <h1 className="text-4xl font-bold text-center p-5 pb-0">Board of Directors</h1>
-      <MembersUpload />
-      <h1 className="text-4xl font-bold text-center p-5 pb-0">CIVF SARTHI</h1>
-      <Sarthi />
-      <h1 className="text-4xl font-bold text-center p-5 pb-0">Announcements</h1>
-      <AnnouncementUpload />
-      <h1 className="text-4xl font-bold text-center p-5 pb-0">Startups</h1>
-      <StartupAdmin />
-      <h1 className="text-4xl font-bold text-center p-5 pb-0">Gallery</h1>
-      <GalleryAdmin />
-      <h1 className="text-4xl font-bold text-center p-5 pb-0">Testimonials</h1>
-      <ClientTestimonialsAdmin />
-      <h1 className="text-4xl font-bold text-center p-5 pb-0">News</h1>
-      <NewsUploadPage />
-      <h1 className="text-4xl font-bold text-center p-5 pb-0">Events</h1>
-      <UploadEvent />
-      
+        <h1 className="text-4xl font-bold text-center p-5 pb-0 text-white">Board of Directors</h1>
+        <MembersUpload />
+        <h1 className="text-4xl font-bold text-center p-5 pb-0 text-white">CIVF SARTHI</h1>
+        <Sarthi />
+        <h1 className="text-4xl font-bold text-center p-5 pb-0 text-white">Announcements</h1>
+        <AnnouncementUpload />
+        <h1 className="text-4xl font-bold text-center p-5 pb-0 text-white">Startups</h1>
+        <StartupAdmin />
+        <h1 className="text-4xl font-bold text-center p-5 pb-0 text-white">Gallery</h1>
+        <GalleryAdmin />
+        <h1 className="text-4xl font-bold text-center p-5 pb-0 text-white">Testimonials</h1>
+        <ClientTestimonialsAdmin />
+        <h1 className="text-4xl font-bold text-center p-5 pb-0 text-white">News</h1>
+        <NewsUploadPage />
+        <h1 className="text-4xl font-bold text-center p-5 pb-0 text-white">Events</h1>
+        <UploadEvent />
       </div>
     </div>
   );
