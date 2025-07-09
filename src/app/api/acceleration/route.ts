@@ -107,37 +107,16 @@ export async function POST(req: Request) {
     const uuid = uuidv4();
     const emailBody = `
     <div style="font-family: Arial, sans-serif; font-size: 14px; color: #333; line-height: 1.6;">
-      <p>Thank you for your submission to the <strong>CIVF Acceleration Program</strong>.</p>
+      <p>Dear ${companyName}, Thank you for submitting your application for the <strong>CIVF Acceleration Program</strong>. 
+      We are pleased to confirm that your application has been received.</p>
+      Your unique tracking ID is: ${uuid}. 
+      <p>You can use this ID to check the status of your application by visiting the CIVF website: Acceleration Program > Track Application or directly via this link.
+      We wish you the very best in your entrepreneurial journey.</p>
+
+     <p> Best regards,
+      <strong>CIVF</strong></p>
+      
   
-      <p><strong>Your Application Reference ID:</strong> ${uuid}</p>
-  
-      <p>We have received your application with the following details:</p>
-  
-      <ul style="list-style: none; padding: 0;">
-        <li><strong>First Name:</strong> ${firstName}</li>
-        <li><strong>Last Name:</strong> ${lastName}</li>
-        <li><strong>Email:</strong> ${email}</li>
-        <li><strong>Phone:</strong> ${phone}</li>
-        <li><strong>Equity Stake:</strong> ${equityStack}%</li>
-        <li><strong>LinkedIn URL:</strong> <a href="${linkedInURL}" target="_blank">${linkedInURL}</a></li>
-        <li><strong>Company Name:</strong> ${companyName}</li>
-        <li><strong>Company Website:</strong> <a href="${companyWebsite}" target="_blank">${companyWebsite}</a></li>
-        <li><strong>Other Founders:</strong> ${coFounder}</li>
-        <li><strong>Product/Service Name:</strong> ${productName}</li>
-        <li><strong>Product/Service Description:</strong> ${productDescription}</li>
-        <li><strong>Product Demo URL:</strong> <a href="${productDemoURL}" target="_blank">${productDemoURL}</a></li>
-        <li><strong>Number of Employees:</strong> ${employees}</li>
-        <li><strong>Primary Contact:</strong> ${isPrimary === 'Yes' ? 'Yes' : 'No'}</li>
-  
-        ${nameInvestor && nameInvestor.trim() !== '' ? `<li><strong>Investor Name:</strong> ${nameInvestor}</li>` : ''}
-        ${investmentInINR && investmentInINR.trim() !== '' ? `<li><strong>Investment Amount (INR):</strong> ${investmentInINR}</li>` : ''}
-        ${investmentTime && investmentTime.trim() !== '' ? `<li><strong>Investment Time:</strong> ${investmentTime}</li>` : ''}
-        ${otherInvestors && otherInvestors.trim() !== '' ? `<li><strong>Other Investors:</strong> ${otherInvestors}</li>` : ''}
-      </ul>
-  
-      <p>If you have any questions, please reply to this email.</p>
-  
-      <p>Best regards,<br><strong>CIVF Team</strong></p>
     </div>
   `;
   
