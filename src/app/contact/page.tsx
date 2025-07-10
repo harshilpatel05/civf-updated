@@ -13,7 +13,7 @@ const contact = () => {
       contactNumber: e.currentTarget.contactNumber.value,
       purpose: e.currentTarget.purpose.value,
     };
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/contactForm`, {
+    const res = await fetch(`api/contactForm`, {
       method: "POST",
       body: JSON.stringify(formData),
       headers: {
