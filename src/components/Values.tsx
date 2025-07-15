@@ -138,13 +138,13 @@ export default function Values() {
      <div className="flex flex-col md:flex-row items-center justify-center p-6 space-y-6 md:space-y-0 md:space-x-10">
   <div className="flex-shrink-0">
     <Image
-      src="/face-cards/rvupadhyay.png"
-      className="w-48 h-auto rounded-2xl shadow-lg"
+      src="/face-cards/atulpatel.jpg"
+      className="w-100 h-auto rounded-2xl shadow-lg"
       width={192}
       height={192}
       alt="Image"
     />
-    <h1 className='text-center text-lg p-0.5 text-black font-bold'>Dr. R. V. Upadhyay</h1>
+    <h1 className='text-center text-lg p-0.5 text-black font-bold'>Dr. Atul Patel</h1>
   </div>
   <div className="max-w-2xl text-justify">
     <p className="text-black italic text-lg leading-relaxed">

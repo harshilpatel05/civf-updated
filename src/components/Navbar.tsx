@@ -29,8 +29,9 @@ export default function Navbar() {
       
       <nav className="flex bg-blue-900 w-full justify-center flex-wrap text-white text-base relative">
       <Link href="/" className="bg-blue-900 hover:bg-orange-500 transition p-3">Home</Link>
-      <Link href="/supporters" className="bg-blue-900 hover:bg-orange-500 transition p-3">Our Supporters</Link>
-        <Link href="/aboutUs" className="bg-blue-900 hover:bg-orange-500 transition p-3">About Us</Link>
+      <Link href="/aboutUs" className="bg-blue-900 hover:bg-orange-500 transition p-3">About Us</Link>
+      <Link href="/supporters" className="bg-blue-900 hover:bg-orange-500 transition p-3">Startup Ecosystem</Link>
+        
 
         <div className="relative">
           <button

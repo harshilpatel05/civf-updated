@@ -45,8 +45,12 @@ const contact = () => {
             </h3>
             <ul className="text-black pt-6">
               <li className="my-5">
-                <i className="mr-2 fas fa-map-marker-alt text-black"></i>{" "}
-                CHARUSAT Campus, Off Nadiad-Petlad Highway, Changa, Anand
+                <i className="mr-2 text-justify fas fa-map-marker-alt text-black"></i>{" "}
+                102, Multi Utility Complex, CHARUSAT Campus,
+              </li>
+              <li className="my-5">
+                <i className="mr-2 text-justify fas fa-map-marker-alt text-black"></i>{" "}
+                 Off Nadiad-Petlad Highway, Changa, Anand
               </li>
               <li className="my-5">
                 <i className="mr-2 fas fa-phone-alt text-black"></i>{" "}

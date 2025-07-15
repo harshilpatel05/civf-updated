@@ -33,7 +33,7 @@ export default function ClientSarthi() {
               src={`/api/images/${member.imageId}`}
               alt="Sarthi"
               fill
-              className="object-contain rounded-full"
+              className="object-contain rounded-xl"
               sizes="(max-width: 768px) 100vw, 280px"
             />
           </div>
