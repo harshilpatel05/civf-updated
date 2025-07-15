@@ -10,7 +10,7 @@ const ALLOWED_PDF_TYPES = ['application/pdf'];
 export async function GET() {
   try {
     const { db } = await getDbAndBucket('announcements');
-    const announcements = await db.collection('announcements').find().toArray();
+    const announcements = await db.collection('announcements').find().sort({uploadedAt: -1}).toArray();
 
     return NextResponse.json(
       announcements.map((doc) => ({
