@@ -73,7 +73,6 @@ const centers = [
 export default function IndustriesPage() {
   const [selectedCenter, setSelectedCenter] = useState<typeof centers[0] | null>(null);
 
-  const [pageCount] = useState(6); // Adjust if different centers have different page counts
 
   const getPages = (folder: string, count: number) =>
   Array.from({ length: count }, (_, i) => `/flipbooks/${folder}/${i + 1}.jpg`);
