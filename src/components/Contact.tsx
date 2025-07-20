@@ -40,7 +40,7 @@ export default function Contact(){
                   <li><Link href='/aboutUs'>About Us</Link></li>
                   <li><Link href='/startup'>Start Up Portfolio</Link></li>
                   <li><Link href='/services'>Services</Link></li>
-                  <li><Link href=''>Donate</Link></li>
+                  <li><Link href='https://forms.gle/j5d5vWFu57UakV4q8'>Donate</Link></li>
                   <li><Link href='/career'>Career at CIVF</Link></li>
                 </ul>
               </div>

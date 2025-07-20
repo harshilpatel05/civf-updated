@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getDbAndBucket } from '@/utils/mongodb';
+import { ObjectId } from 'mongodb';
 
 // Reduced limits for serverless deployment compatibility
 const MAX_PDF_SIZE = 4 * 1024 * 1024; // 4MB for serverless compatibility
@@ -10,7 +11,7 @@ const ALLOWED_PDF_TYPES = ['application/pdf'];
 export async function GET() {
   try {
     const { db } = await getDbAndBucket('announcements');
-    const announcements = await db.collection('announcements').find().sort({uploadedAt: -1}).toArray();
+    const announcements = await db.collection('announcements').find().sort({ sortOrder: 1 }).toArray();
 
     return NextResponse.json(
       announcements.map((doc) => ({
@@ -25,6 +26,26 @@ export async function GET() {
   } catch (err) {
     console.error(err);
     return new NextResponse('Failed to fetch announcements', { status: 500 });
+  }
+}
+export async function PATCH(req: Request) {
+  try {
+    const updates = await req.json(); // [{ _id, sortOrder }]
+    const { db } = await getDbAndBucket('announcements');
+
+    const bulkOps = updates.map(({ _id, sortOrder }: { _id: string; sortOrder: number }) => ({
+      updateOne: {
+        filter: { _id: new ObjectId(_id) },
+        update: { $set: { sortOrder } }
+      }
+    }));
+
+    await db.collection('announcements').bulkWrite(bulkOps);
+
+    return NextResponse.json({ message: 'Order updated successfully' });
+  } catch (err) {
+    console.error('PATCH error:', err);
+    return new NextResponse('Failed to update order', { status: 500 });
   }
 }
 
@@ -91,6 +112,10 @@ export async function POST(req: Request) {
       });
 
       // Save announcement data
+      // Get the current highest sortOrder value
+      const count = await db.collection('announcements').countDocuments();
+
+      // Save announcement data with sortOrder
       const result = await db.collection('announcements').insertOne({
         title,
         image: `/api/images/${imageUploadStream.id}?bucket=announcements`,
@@ -98,9 +123,11 @@ export async function POST(req: Request) {
           _id: pdfUploadStream.id,
         },
         uploadedAt: new Date(),
+        sortOrder: count, 
       });
 
-      return NextResponse.json({ 
+
+      return NextResponse.json({
         message: 'Announcement uploaded successfully',
         id: String(result.insertedId)
       });

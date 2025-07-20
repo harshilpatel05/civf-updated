@@ -124,18 +124,52 @@ export default function AnnouncementUpload() {
       showMessage('❌ Failed to delete announcement.', 'error');
     }
   };
+  const moveUp = (index: number) => {
+    if (index === 0) return;
+    const newOrder = [...announcements];
+    [newOrder[index - 1], newOrder[index]] = [newOrder[index], newOrder[index - 1]];
+    setAnnouncements(newOrder);
+  };
+
+  const moveDown = (index: number) => {
+    if (index === announcements.length - 1) return;
+    const newOrder = [...announcements];
+    [newOrder[index], newOrder[index + 1]] = [newOrder[index + 1], newOrder[index]];
+    setAnnouncements(newOrder);
+  };
+
+  const saveOrder = async () => {
+    try {
+      const updates = announcements.map((a, i) => ({ _id: a._id, sortOrder: i }));
+      const res = await fetch('/api/announcements', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updates),
+      });
+      if (res.ok) {
+        showMessage('✅ Order updated successfully!', 'success');
+        fetchAnnouncements(); // Refresh data
+      } else {
+        showMessage('❌ Failed to save new order.', 'error');
+      }
+    } catch (err) {
+      console.error('Save order error:', err);
+      showMessage('❌ Error saving order.', 'error');
+    }
+  };
+
 
   return (
-    <div className="max-w-5xl mx-auto mt-10 p-6 text-black bg-white rounded shadow space-y-10">
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <h2 className="text-2xl font-bold text-center">Upload New Announcement</h2>
-        
-        {/* Deployment Tips */}
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+    <div className="max-w-5xl mx-auto mt-10 p-6 text-black bg-white rounded shadow space-y-12">
+      {/* Upload Form */}
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <h2 className="text-3xl font-bold text-center text-blue-800">Upload New Announcement</h2>
+
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
           <h3 className="text-sm font-semibold text-blue-800 mb-2">📋 Deployment Upload Tips:</h3>
           <ul className="text-xs text-blue-700 space-y-1">
-            <li>• <strong>PDFs:</strong> Maximum 4MB - Use online PDF compressors if needed</li>
-            <li>• <strong>Images:</strong> Maximum 2MB - Compress images before uploading</li>
+            <li>• <strong>PDFs:</strong> Max 4MB — Use online PDF compressors if needed</li>
+            <li>• <strong>Images:</strong> Max 2MB — Compress before uploading</li>
             <li>• <strong>For larger files:</strong> Upload locally first, then deploy</li>
           </ul>
         </div>
@@ -149,8 +183,8 @@ export default function AnnouncementUpload() {
           required
         />
 
-        <div>
-          <label className="block text-sm font-medium mb-2">Announcement Image</label>
+        <div className="space-y-1">
+          <label className="block text-sm font-medium">Announcement Image</label>
           <input
             type="file"
             accept="image/*"
@@ -158,18 +192,14 @@ export default function AnnouncementUpload() {
             onChange={(e) => setImage(e.target.files?.[0] || null)}
             required
           />
-          <p className="text-xs text-gray-500 mt-1">
-            Maximum file size: 2MB for deployment. Supported formats: JPEG, PNG, GIF, WebP
-          </p>
+          <p className="text-xs text-gray-500">Max 2MB (JPEG, PNG, GIF, WebP)</p>
           {image && (
-            <p className="text-xs text-blue-600">
-              Selected: {image.name} ({(image.size / (1024 * 1024)).toFixed(2)}MB)
-            </p>
+            <p className="text-xs text-blue-600">Selected: {image.name} ({(image.size / (1024 * 1024)).toFixed(2)}MB)</p>
           )}
         </div>
 
-        <div>
-          <label className="block text-sm font-medium mb-2">PDF File</label>
+        <div className="space-y-1">
+          <label className="block text-sm font-medium">PDF File</label>
           <input
             type="file"
             accept=".pdf"
@@ -177,44 +207,40 @@ export default function AnnouncementUpload() {
             onChange={(e) => setPdfFile(e.target.files?.[0] || null)}
             required
           />
-          <p className="text-xs text-gray-500 mt-1">
-            Maximum file size: 4MB for deployment. Supported format: PDF only
-          </p>
+          <p className="text-xs text-gray-500">Max 4MB (PDF only)</p>
           {pdfFile && (
-            <p className="text-xs text-blue-600">
-              Selected: {pdfFile.name} ({(pdfFile.size / (1024 * 1024)).toFixed(2)}MB)
-            </p>
+            <p className="text-xs text-blue-600">Selected: {pdfFile.name} ({(pdfFile.size / (1024 * 1024)).toFixed(2)}MB)</p>
           )}
         </div>
 
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 font-semibold"
         >
           Upload Announcement
         </button>
 
-        {/* Enhanced Success/Error Message */}
         {message && (
-          <div className={`p-3 rounded-lg text-center font-medium ${
-            messageType === 'success' 
-              ? 'bg-green-100 text-green-800 border border-green-300' 
-              : 'bg-red-100 text-red-800 border border-red-300'
-          }`}>
+          <div className={`p-3 rounded-lg text-center font-medium ${messageType === 'success'
+            ? 'bg-green-100 text-green-800 border border-green-300'
+            : 'bg-red-100 text-red-800 border border-red-300'
+            }`}>
             {message}
           </div>
         )}
       </form>
 
-      <div>
-        <h2 className="text-xl font-bold mb-4 text-center">Existing Announcements</h2>
+      {/* Announcement List */}
+      <div className="space-y-6">
+        <h2 className="text-2xl font-bold text-center text-blue-800">Existing Announcements</h2>
         {announcements.length === 0 ? (
           <p className="text-center text-gray-500">No announcements uploaded yet.</p>
         ) : (
           <ul className="space-y-6">
-            {announcements.map((announcement) => (
-              <li key={announcement._id} className="border p-4 rounded shadow">
-                <div className="flex items-center gap-4">
+            {announcements.map((announcement, index) => (
+              <li key={announcement._id} className="border p-4 rounded shadow bg-gray-50">
+                <div className="flex flex-wrap md:flex-nowrap items-center justify-between gap-6">
+                  {/* Image */}
                   {announcement.image && (
                     <div className="relative w-24 h-24 flex-shrink-0">
                       <Image
@@ -225,27 +251,62 @@ export default function AnnouncementUpload() {
                         sizes="96px"
                         onError={(e) => {
                           const target = e.target as HTMLImageElement;
-                          target.src = 'https://via.placeholder.com/96?text=Image+Not+Found';
+                          target.src = 'https://via.placeholder.com/96?text=Not+Found';
                         }}
                       />
                     </div>
                   )}
-                  <div className="flex-grow">
-                    <h3 className="text-lg font-semibold">{announcement.title}</h3>
+
+                  {/* Title + PDF Info */}
+                  <div className="flex-grow min-w-[200px]">
+                    <h3 className="text-lg font-semibold text-gray-900">{announcement.title}</h3>
                     <p className="text-sm text-gray-600">PDF ID: {announcement.file._id}</p>
                   </div>
-                  <button
-                    onClick={() => handleDelete(announcement._id)}
-                    className="bg-red-600 text-white px-4 py-1 rounded hover:bg-red-700 text-sm"
-                  >
-                    Delete
-                  </button>
+
+                  {/* Control Buttons */}
+                  <div className="flex flex-col gap-2 items-center md:items-end">
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => moveUp(index)}
+                        disabled={index === 0}
+                        className="bg-gray-300 hover:bg-gray-400 text-black text-xs px-3 py-1 rounded disabled:opacity-50"
+                      >
+                        ↑ 
+                      </button>
+                      <button
+                        onClick={() => moveDown(index)}
+                        disabled={index === announcements.length - 1}
+                        className="bg-gray-300 hover:bg-gray-400 text-black text-xs px-3 py-1 rounded disabled:opacity-50"
+                      >
+                        ↓ 
+                      </button>
+                    </div>
+                    <button
+                      onClick={() => handleDelete(announcement._id)}
+                      className="bg-red-600 hover:bg-red-700 text-white text-xs px-4 py-1 rounded"
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </div>
               </li>
+
             ))}
           </ul>
         )}
+
+        {/* Save Order Button */}
+        {announcements.length > 1 && (
+          <div className="flex justify-center mt-4">
+            <button
+              onClick={saveOrder}
+              className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 font-semibold"
+            >
+              Save Order
+            </button>
+          </div>
+        )}
       </div>
     </div>
-  );
+  )
 } 
