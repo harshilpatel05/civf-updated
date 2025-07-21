@@ -17,13 +17,13 @@ const centers = [
     name: "CHARUSAT IPR Cell",
     image: "/Benefits/Services/academia/ipr.png",
     folder: "ipr",
-    pages: 8,
+    pages: 2,
   },
   {
     name: "BDIPS Labs",
     image: "/Benefits/Services/academia/bdi.png",
     folder: "bdi",
-    pages: 6,
+    pages: 16,
   },
   {
     name: "Dr. K. C. Patel R & D Center (KRADLE)",
