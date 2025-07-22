@@ -160,7 +160,7 @@ export default function SarthiUploadPage() {
     }));
 
     try {
-      const res = await fetch('/api/sarthi/reorder', {
+      const res = await fetch('/api/sarthi', {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

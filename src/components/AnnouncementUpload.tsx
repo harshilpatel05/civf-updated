@@ -1,6 +1,21 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  SortableContext,
+  useSortable,
+  arrayMove,
+  rectSortingStrategy,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 type AnnouncementItem = {
   _id: string;
@@ -11,6 +26,71 @@ type AnnouncementItem = {
   };
 };
 
+function SortableAnnouncement({
+  announcement,
+  index,
+  onDelete,
+}: {
+  announcement: AnnouncementItem;
+  index: number;
+  onDelete: (id: string) => void;
+}) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+  } = useSortable({ id: announcement._id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
+  return (
+    <li
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}
+      className="border p-4 rounded shadow bg-gray-50"
+    >
+      <div className="flex flex-wrap md:flex-nowrap items-center justify-between gap-6">
+        {announcement.image && (
+          <div className="relative w-24 h-24 flex-shrink-0">
+            <Image
+              src={announcement.image}
+              alt={announcement.title}
+              fill
+              className="object-contain rounded"
+              sizes="96px"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.src = 'https://via.placeholder.com/96?text=Not+Found';
+              }}
+            />
+          </div>
+        )}
+
+        <div className="flex-grow min-w-[200px]">
+          <h3 className="text-lg font-semibold text-gray-900">{announcement.title}</h3>
+          <p className="text-sm text-gray-600">PDF ID: {announcement.file._id}</p>
+        </div>
+
+        <div className="flex flex-col gap-2 items-center md:items-end">
+          <button
+            onClick={() => onDelete(announcement._id)}
+            className="bg-red-600 hover:bg-red-700 text-white text-xs px-4 py-1 rounded"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    </li>
+  );
+}
+
 export default function AnnouncementUpload() {
   const [announcements, setAnnouncements] = useState<AnnouncementItem[]>([]);
   const [title, setTitle] = useState('');
@@ -18,6 +98,8 @@ export default function AnnouncementUpload() {
   const [pdfFile, setPdfFile] = useState<File | null>(null);
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState<'success' | 'error' | ''>('');
+
+  const sensors = useSensors(useSensor(PointerSensor));
 
   useEffect(() => {
     fetchAnnouncements();
@@ -49,31 +131,27 @@ export default function AnnouncementUpload() {
       return;
     }
 
-    // Validate file sizes for deployment compatibility
-    const MAX_PDF_SIZE = 4 * 1024 * 1024; // 4MB for deployment
-    const MAX_IMAGE_SIZE = 2 * 1024 * 1024; // 2MB for deployment
+    const MAX_PDF_SIZE = 4 * 1024 * 1024;
+    const MAX_IMAGE_SIZE = 2 * 1024 * 1024;
 
-    if (image && image.size > MAX_IMAGE_SIZE) {
-      showMessage(`❌ Image file too large. Maximum size is ${MAX_IMAGE_SIZE / (1024 * 1024)}MB for deployment. Please compress your image.`, 'error');
+    if (image.size > MAX_IMAGE_SIZE) {
+      showMessage('❌ Image too large. Max 2MB.', 'error');
+      return;
+    }
+    if (pdfFile.size > MAX_PDF_SIZE) {
+      showMessage('❌ PDF too large. Max 4MB.', 'error');
       return;
     }
 
-    if (pdfFile && pdfFile.size > MAX_PDF_SIZE) {
-      showMessage(`❌ PDF file too large. Maximum size is ${MAX_PDF_SIZE / (1024 * 1024)}MB for deployment. Please compress your PDF or use a smaller file.`, 'error');
-      return;
-    }
-
-    // Validate file types
     const allowedImageTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
     const allowedPdfTypes = ['application/pdf'];
 
-    if (image && !allowedImageTypes.includes(image.type)) {
-      showMessage('❌ Invalid image format. Please use JPEG, PNG, GIF, or WebP.', 'error');
+    if (!allowedImageTypes.includes(image.type)) {
+      showMessage('❌ Invalid image format.', 'error');
       return;
     }
-
-    if (pdfFile && !allowedPdfTypes.includes(pdfFile.type)) {
-      showMessage('❌ Invalid file format. Please upload a PDF file.', 'error');
+    if (!allowedPdfTypes.includes(pdfFile.type)) {
+      showMessage('❌ Invalid PDF format.', 'error');
       return;
     }
 
@@ -89,7 +167,7 @@ export default function AnnouncementUpload() {
       });
 
       if (res.ok) {
-        showMessage('✅ Announcement uploaded successfully!', 'success');
+        showMessage('✅ Uploaded successfully!', 'success');
         setTitle('');
         setImage(null);
         setPdfFile(null);
@@ -114,7 +192,7 @@ export default function AnnouncementUpload() {
       });
 
       if (res.ok) {
-        showMessage('🗑️ Announcement deleted successfully!', 'success');
+        showMessage('🗑️ Deleted successfully!', 'success');
         fetchAnnouncements();
       } else {
         showMessage('❌ Failed to delete announcement.', 'error');
@@ -124,18 +202,16 @@ export default function AnnouncementUpload() {
       showMessage('❌ Failed to delete announcement.', 'error');
     }
   };
-  const moveUp = (index: number) => {
-    if (index === 0) return;
-    const newOrder = [...announcements];
-    [newOrder[index - 1], newOrder[index]] = [newOrder[index], newOrder[index - 1]];
-    setAnnouncements(newOrder);
-  };
 
-  const moveDown = (index: number) => {
-    if (index === announcements.length - 1) return;
-    const newOrder = [...announcements];
-    [newOrder[index], newOrder[index + 1]] = [newOrder[index + 1], newOrder[index]];
-    setAnnouncements(newOrder);
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+
+    const oldIndex = announcements.findIndex((a) => a._id === active.id);
+    const newIndex = announcements.findIndex((a) => a._id === over.id);
+
+    const reordered = arrayMove(announcements, oldIndex, newIndex);
+    setAnnouncements(reordered);
   };
 
   const saveOrder = async () => {
@@ -148,7 +224,7 @@ export default function AnnouncementUpload() {
       });
       if (res.ok) {
         showMessage('✅ Order updated successfully!', 'success');
-        fetchAnnouncements(); // Refresh data
+        fetchAnnouncements();
       } else {
         showMessage('❌ Failed to save new order.', 'error');
       }
@@ -158,19 +234,17 @@ export default function AnnouncementUpload() {
     }
   };
 
-
   return (
     <div className="max-w-5xl mx-auto mt-10 p-6 text-black bg-white rounded shadow space-y-12">
-      {/* Upload Form */}
       <form onSubmit={handleSubmit} className="space-y-6">
         <h2 className="text-3xl font-bold text-center text-blue-800">Upload New Announcement</h2>
 
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
           <h3 className="text-sm font-semibold text-blue-800 mb-2">📋 Deployment Upload Tips:</h3>
           <ul className="text-xs text-blue-700 space-y-1">
-            <li>• <strong>PDFs:</strong> Max 4MB — Use online PDF compressors if needed</li>
-            <li>• <strong>Images:</strong> Max 2MB — Compress before uploading</li>
-            <li>• <strong>For larger files:</strong> Upload locally first, then deploy</li>
+            <li>• <strong>PDFs:</strong> Max 4MB</li>
+            <li>• <strong>Images:</strong> Max 2MB</li>
+            <li>• <strong>Large Files:</strong> Upload locally first</li>
           </ul>
         </div>
 
@@ -183,8 +257,8 @@ export default function AnnouncementUpload() {
           required
         />
 
-        <div className="space-y-1">
-          <label className="block text-sm font-medium">Announcement Image</label>
+        <div>
+          <label className="block text-sm font-medium">Image</label>
           <input
             type="file"
             accept="image/*"
@@ -192,14 +266,10 @@ export default function AnnouncementUpload() {
             onChange={(e) => setImage(e.target.files?.[0] || null)}
             required
           />
-          <p className="text-xs text-gray-500">Max 2MB (JPEG, PNG, GIF, WebP)</p>
-          {image && (
-            <p className="text-xs text-blue-600">Selected: {image.name} ({(image.size / (1024 * 1024)).toFixed(2)}MB)</p>
-          )}
         </div>
 
-        <div className="space-y-1">
-          <label className="block text-sm font-medium">PDF File</label>
+        <div>
+          <label className="block text-sm font-medium">PDF</label>
           <input
             type="file"
             accept=".pdf"
@@ -207,16 +277,9 @@ export default function AnnouncementUpload() {
             onChange={(e) => setPdfFile(e.target.files?.[0] || null)}
             required
           />
-          <p className="text-xs text-gray-500">Max 4MB (PDF only)</p>
-          {pdfFile && (
-            <p className="text-xs text-blue-600">Selected: {pdfFile.name} ({(pdfFile.size / (1024 * 1024)).toFixed(2)}MB)</p>
-          )}
         </div>
 
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 font-semibold"
-        >
+        <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 font-semibold">
           Upload Announcement
         </button>
 
@@ -230,72 +293,35 @@ export default function AnnouncementUpload() {
         )}
       </form>
 
-      {/* Announcement List */}
       <div className="space-y-6">
         <h2 className="text-2xl font-bold text-center text-blue-800">Existing Announcements</h2>
+
         {announcements.length === 0 ? (
           <p className="text-center text-gray-500">No announcements uploaded yet.</p>
         ) : (
-          <ul className="space-y-6">
-            {announcements.map((announcement, index) => (
-              <li key={announcement._id} className="border p-4 rounded shadow bg-gray-50">
-                <div className="flex flex-wrap md:flex-nowrap items-center justify-between gap-6">
-                  {/* Image */}
-                  {announcement.image && (
-                    <div className="relative w-24 h-24 flex-shrink-0">
-                      <Image
-                        src={announcement.image}
-                        alt={announcement.title}
-                        fill
-                        className="object-contain rounded"
-                        sizes="96px"
-                        onError={(e) => {
-                          const target = e.target as HTMLImageElement;
-                          target.src = 'https://via.placeholder.com/96?text=Not+Found';
-                        }}
-                      />
-                    </div>
-                  )}
-
-                  {/* Title + PDF Info */}
-                  <div className="flex-grow min-w-[200px]">
-                    <h3 className="text-lg font-semibold text-gray-900">{announcement.title}</h3>
-                    <p className="text-sm text-gray-600">PDF ID: {announcement.file._id}</p>
-                  </div>
-
-                  {/* Control Buttons */}
-                  <div className="flex flex-col gap-2 items-center md:items-end">
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => moveUp(index)}
-                        disabled={index === 0}
-                        className="bg-gray-300 hover:bg-gray-400 text-black text-xs px-3 py-1 rounded disabled:opacity-50"
-                      >
-                        ↑ 
-                      </button>
-                      <button
-                        onClick={() => moveDown(index)}
-                        disabled={index === announcements.length - 1}
-                        className="bg-gray-300 hover:bg-gray-400 text-black text-xs px-3 py-1 rounded disabled:opacity-50"
-                      >
-                        ↓ 
-                      </button>
-                    </div>
-                    <button
-                      onClick={() => handleDelete(announcement._id)}
-                      className="bg-red-600 hover:bg-red-700 text-white text-xs px-4 py-1 rounded"
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </div>
-              </li>
-
-            ))}
-          </ul>
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+          >
+            <SortableContext
+              items={announcements.map((a) => a._id)}
+              strategy={rectSortingStrategy}
+            >
+              <ul className="space-y-6">
+                {announcements.map((announcement, index) => (
+                  <SortableAnnouncement
+                    key={announcement._id}
+                    announcement={announcement}
+                    index={index}
+                    onDelete={handleDelete}
+                  />
+                ))}
+              </ul>
+            </SortableContext>
+          </DndContext>
         )}
 
-        {/* Save Order Button */}
         {announcements.length > 1 && (
           <div className="flex justify-center mt-4">
             <button
@@ -308,5 +334,5 @@ export default function AnnouncementUpload() {
         )}
       </div>
     </div>
-  )
-} 
+  );
+}
