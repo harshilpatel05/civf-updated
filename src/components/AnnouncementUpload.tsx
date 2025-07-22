@@ -28,7 +28,6 @@ type AnnouncementItem = {
 
 function SortableAnnouncement({
   announcement,
-  index,
   onDelete,
 }: {
   announcement: AnnouncementItem;
