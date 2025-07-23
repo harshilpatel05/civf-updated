@@ -1,56 +1,73 @@
+'use client';
 import Header from "@/components/Header";
 import Navbar from "@/components/Navbar";
 import Contact from "@/components/Contact";
+import Flipbook from "@/components/Flipbook";
 import Image from "next/image";
+import { useState } from "react";
 
 const centers = [
   {
     name: "Charusat Space Research and Technology Center",
     image: "/Benefits/Services/academia/csrtc.png",
-    link: "https://civf.co.in/dearflip-jquery-flipbook/examples/2L1Space.html",
+    folder: "csrtc",
+    pages: 12,
   },
   {
     name: "CHARUSAT IPR Cell",
     image: "/Benefits/Services/academia/ipr.png",
-    link: "https://civf.co.in/dearflip-jquery-flipbook/examples/3L1PRCELL9X4.html",
+    folder: "ipr",
+    pages: 2,
   },
   {
-    name: "CHARUSAT ERP Developemt Cell",
+    name: "CHARUSAT ERP Development Cell",
     image: "/Benefits/Services/academia/erp.png",
-    link: "https://civf.co.in/dearflip-jquery-flipbook/examples/4L1e-Gov.html",
+    folder: "erp",
+    pages: 16,
   },
   {
     name: "Dr. K. C. Patel R & D Center (KRADLE)",
     image: "/Benefits/Services/academia/kcp.png",
-    link: "https://civf.co.in/dearflip-jquery-flipbook/examples/6L1KRAD.html/",
+    folder: "kradle",
+    pages: 10,
   },
-  {
+    {
     name: "Academic Quality Management & Assurance Center",
     image: "/Benefits/Services/academia/acq.png",
-    link: "https://civf.co.in/dearflip-jquery-flipbook/examples/ACQMA_NAAC.html",
+    folder: "acq",
+    pages: 10,
   },
   {
     name: "Charusat Pharmaceutical Research Consultancy and Testing Cell",
     image: "/Benefits/Services/academia/phq.png",
-    link: "https://civf.co.in/dearflip-jquery-flipbook/examples/CHARUSATPharmaceutical.html",
+    folder: "phq",
+    pages: 8,
   },
- 
+
 ];
 
-export default function AcademiaPage() {
+
+export default function IndustriesPage() {
+  const [selectedCenter, setSelectedCenter] = useState<typeof centers[0] | null>(null);
+
+
+  const getPages = (folder: string, count: number) =>
+  Array.from({ length: count }, (_, i) => `/flipbooks/${folder}/${i + 1}.jpg`);
+
+
   return (
     <div className="min-h-screen bg-rose-50">
       <Header />
       <Navbar />
+
       <div className="py-12 px-4">
-        <h1 className="text-4xl font-bold text-center mb-12 text-gray-800">Services for Academia</h1>
+        <h1 className="text-4xl font-bold text-center mb-12 text-gray-800">Services for Industries</h1>
+
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
           {centers.map((center) => (
-            <a
+            <div
               key={center.name}
-              href={center.link}
-              target="_blank"
-              rel="noopener noreferrer"
+              onClick={() => setSelectedCenter(center)}
               className="bg-white rounded-xl shadow-lg flex flex-col items-center text-center hover:shadow-2xl transition-shadow overflow-hidden cursor-pointer"
             >
               <div className="w-full h-72 relative">
@@ -68,11 +85,27 @@ export default function AcademiaPage() {
                   {center.name}
                 </h2>
               </div>
-            </a>
+            </div>
           ))}
         </div>
       </div>
+
       <Contact />
+
+      {selectedCenter && (
+  <div className="fixed inset-0 bg-black/70 z-50 flex justify-center items-center">
+    <div className="relative w-[90vw] max-w-5xl bg-white rounded-lg shadow-xl p-4">
+      <button
+        onClick={() => setSelectedCenter(null)}
+        className="absolute top-3 right-4 text-white bg-red-600 px-3 py-1 rounded hover:bg-red-700 z-10"
+      >
+        ✕ Close
+      </button>
+      <Flipbook pages={getPages(selectedCenter.folder, selectedCenter.pages)} />
+    </div>
+  </div>
+)}
+
     </div>
   );
-} 
+}
