@@ -3,7 +3,7 @@ import { getDbAndBucket } from '@/utils/mongodb';
 import { ObjectId } from 'mongodb';
 
 export async function GET() {
-  try {
+  try {               
     const { db } = await getDbAndBucket('gallery');
     const images = await db.collection('gallery').find().toArray();
     // Group by title

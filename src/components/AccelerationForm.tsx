@@ -15,7 +15,7 @@ export default function AccelarationForm() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
+    
 
     try {
       const formData = new FormData(e.currentTarget);
@@ -34,6 +34,7 @@ export default function AccelarationForm() {
         method: 'POST',
         body: formData,
       });
+      setLoading(true);
 
       if (!res.ok) {
         if (res.status === 409) {
