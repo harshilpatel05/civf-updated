@@ -15,49 +15,52 @@ export default function AccelarationForm() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
 
-    try {
-      const formData = new FormData(e.currentTarget);
 
-      if (
-        !validator(
-          formData.get('phone') as string,
-          formData.get('equityStack') as string
-        )
-      ) {
-        alert('Invalid Phone Number or Equity Stack');
-        return;
-      }
 
-      const res = await fetch(`/api/acceleration`, {
-        method: 'POST',
-        body: formData,
-      });
-      setLoading(true);
+    const formData = new FormData(e.currentTarget);
 
-      if (!res.ok) {
-        if (res.status === 409) {
-          alert('Duplicate Entry With Same Email');
-        } else {
-          alert('Error in Submission');
+    if (
+      !validator(
+        formData.get('phone') as string,
+        formData.get('equityStack') as string
+      )
+    ) {
+      alert('Invalid Phone Number or Equity Stack');
+      return;
+    }
+
+    else {
+      try {
+        const res = await fetch(`/api/acceleration`, {
+          method: 'POST',
+          body: formData,
+        });
+        setLoading(true);
+
+        if (!res.ok) {
+          if (res.status === 409) {
+            alert('Duplicate Entry With Same Email');
+          } else {
+            alert('Error in Submission');
+          }
+          return;
         }
-        return;
-      }
 
-      const data = await res.json();
-      
-      if (data.success && data.uuid) {
-        setReferenceNumber(data.uuid);
-        setShowPopup(true);
-        (document.getElementById('frm') as HTMLFormElement).reset();
+        const data = await res.json();
+
+        if (data.success && data.uuid) {
+          setReferenceNumber(data.uuid);
+          setShowPopup(true);
+          (document.getElementById('frm') as HTMLFormElement).reset();
+        }
+        setLoading(false);
+      } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : 'Unknown error';
+        console.error(error);
+        toast.error(message);
+        setLoading(false);
       }
-      setLoading(false);
-    } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : 'Unknown error';
-      console.error(error);
-      toast.error(message);
-      setLoading(false);
     }
   };
 
@@ -85,12 +88,12 @@ export default function AccelarationForm() {
                     { id: 'firstName', label: 'First Name' },
                     { id: 'lastName', label: 'Last Name' },
                     { id: 'email', label: 'Your email', type: 'email' },
-                    { id: 'phone', label: 'Phone', type: 'text',placeholder: "XXX-XXX-XXXX" },
+                    { id: 'phone', label: 'Phone', type: 'text', placeholder: "XXX-XXX-XXXX" },
                     { id: 'equityStack', label: 'Equity Stake In %' },
                     { id: 'linkedInURL', label: 'LinkedIn URL' },
                     { id: 'componyName', label: 'Company Name' },
                     { id: 'companyWebsite', label: 'Company Website' },
-                  ].map(({ id, label, type = 'text',placeholder = label }) => (
+                  ].map(({ id, label, type = 'text', placeholder = label }) => (
                     <div key={id}>
                       <label htmlFor={id} className="block my-2 text-sm font-medium text-black">
                         {label} <span className="text-red-500">*</span>
@@ -99,7 +102,7 @@ export default function AccelarationForm() {
                         type={type}
                         name={id}
                         id={id}
-                        placeholder = {placeholder}
+                        placeholder={placeholder}
                         required
                         className="border border-black outline-black text-black sm:text-sm rounded-lg block w-full p-2.5 bg-white placeholder-black focus:ring-black focus:border-black"
                       />
@@ -357,7 +360,7 @@ export default function AccelarationForm() {
                 <p className="text-lg font-bold text-blue-600 break-all">{referenceNumber}</p>
               </div>
               <p className="text-xs text-gray-500 mb-6">
-                Please save this reference number for future correspondence. 
+                Please save this reference number for future correspondence.
                 You will also receive a confirmation email with these details.
               </p>
               <button
