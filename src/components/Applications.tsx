@@ -253,7 +253,7 @@ export default function Applications(){
                                 <h3 className="font-semibold text-black mb-2">Product Information</h3>
                                 <p className="text-black"><strong>Product Name:</strong> {app.productName}</p>
                                 <p className="text-black"><strong>Description:</strong> {app.productDescription}</p>
-                                <p className="text-black"><strong>Demo URL:</strong> <a href={`https://${app.productDemoURL}`} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{app.productDemoURL || 'Not provided'}</a></p>
+                                <p className="text-black"><strong>Demo URL:</strong> <a href={`${app.productDemoURL}`} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{app.productDemoURL || 'Not provided'}</a></p>
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
