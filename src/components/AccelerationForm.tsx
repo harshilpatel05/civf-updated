@@ -2,67 +2,184 @@
 import { useState } from 'react';
 import { toast } from 'sonner';
 
+type FormErrors = Record<string, string>;
+
+const baseFieldClass =
+  'border outline-black text-black sm:text-sm rounded-lg block w-full p-2.5 bg-white placeholder-black focus:ring-black focus:border-black';
+
+const getFieldClassName = (hasError: boolean) =>
+  `${baseFieldClass} ${hasError ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : 'border-black'}`;
+
+const getStringValue = (formData: FormData, key: string) =>
+  formData.get(key)?.toString().trim() ?? '';
+
+const isValidUrl = (value: string) => {
+  try {
+    const parsedUrl = new URL(value);
+    return parsedUrl.protocol === 'http:' || parsedUrl.protocol === 'https:';
+  } catch {
+    return false;
+  }
+};
+
+const validateForm = (formData: FormData): FormErrors => {
+  const errors: FormErrors = {};
+  const phone = getStringValue(formData, 'phone').replace(/\D/g, '');
+  const equityValue = getStringValue(formData, 'equityStack');
+  const equity = Number(equityValue);
+  const linkedInUrl = getStringValue(formData, 'linkedInURL');
+  const companyWebsite = getStringValue(formData, 'companyWebsite');
+  const productDemoUrl = getStringValue(formData, 'productDemoURL');
+  const isPrimary = getStringValue(formData, 'isPrimary');
+  const isPatented = getStringValue(formData, 'isPatented');
+  const pitchDeck = formData.get('pitchDesk');
+
+  if (phone.length !== 10) {
+    errors.phone = 'Enter a valid 10-digit phone number.';
+  }
+
+  if (!equityValue || Number.isNaN(equity) || equity < 0 || equity > 100) {
+    errors.equityStack = 'Equity stake must be a number between 0 and 100.';
+  }
+
+  if (!isValidUrl(linkedInUrl)) {
+    errors.linkedInURL = 'Enter a valid LinkedIn URL, including http:// or https://.';
+  }
+
+  if (!isValidUrl(companyWebsite)) {
+    errors.companyWebsite = 'Enter a valid company website URL.';
+  }
+
+  if (productDemoUrl && !isValidUrl(productDemoUrl)) {
+    errors.productDemoURL = 'Enter a valid demo URL or leave this field empty.';
+  }
+
+  if (isPrimary !== 'Yes' && isPrimary !== 'No') {
+    errors.isPrimary = 'Select whether you are the primary contact.';
+  }
+
+  if (isPatented !== 'Yes' && isPatented !== 'No') {
+    errors.isPatented = 'Select whether the product or idea is patented.';
+  }
+
+  if (!(pitchDeck instanceof File) || pitchDeck.size === 0) {
+    errors.pitchDesk = 'Upload your pitch deck before submitting.';
+  }
+
+  return errors;
+};
+
 export default function AccelarationForm() {
   const [showPopup, setShowPopup] = useState(false);
   const [referenceNumber, setReferenceNumber] = useState('');
   const [loading, setLoading] = useState(false);
+  const [formErrors, setFormErrors] = useState<FormErrors>({});
 
-  const validator = (phone: string, equity: string) => {
-    if (phone.length !== 10) return false;
-    const eq = Number(equity);
-    return eq >= 0 && eq <= 100;
+  const clearFieldError = (fieldName: string) => {
+    if (!fieldName) {
+      return;
+    }
+
+    setFormErrors((currentErrors) => {
+      if (!currentErrors[fieldName]) {
+        return currentErrors;
+      }
+
+      const nextErrors = { ...currentErrors };
+      delete nextErrors[fieldName];
+      return nextErrors;
+    });
+  };
+
+  const handleFieldChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
+    const { name, id } = e.target;
+    const fieldName = name || id;
+
+    if (name === 'phone' && e.target instanceof HTMLInputElement) {
+      e.target.value = e.target.value.replace(/\D/g, '').slice(0, 10);
+    }
+
+    clearFieldError(fieldName);
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const form = e.currentTarget;
 
-
-
-    const formData = new FormData(e.currentTarget);
-
-    if (
-      !validator(
-        formData.get('phone') as string,
-        formData.get('equityStack') as string
-      )
-    ) {
-      alert('Invalid Phone Number or Equity Stack');
+    if (!form.checkValidity()) {
+      form.reportValidity();
       return;
     }
 
-    else {
-      try {
-        const res = await fetch(`/api/acceleration`, {
-          method: 'POST',
-          body: formData,
-        });
-        setLoading(true);
+    const formData = new FormData(form);
+    const validationErrors = validateForm(formData);
 
-        if (!res.ok) {
-          if (res.status === 409) {
-            alert('Duplicate Entry With Same Email');
-          } else {
-            alert('Error in Submission');
-          }
-          return;
+    if (Object.keys(validationErrors).length > 0) {
+      setFormErrors(validationErrors);
+      toast.error('Please correct the highlighted fields and try again.');
+
+      const firstInvalidField = Object.keys(validationErrors)[0];
+      const formControl = form.elements.namedItem(firstInvalidField);
+      if (formControl instanceof RadioNodeList) {
+        const firstRadio = formControl[0];
+        if (firstRadio instanceof HTMLElement) {
+          firstRadio.focus();
         }
-
-        const data = await res.json();
-
-        if (data.success && data.uuid) {
-          setReferenceNumber(data.uuid);
-          setShowPopup(true);
-          (document.getElementById('frm') as HTMLFormElement).reset();
-        }
-        setLoading(false);
-      } catch (error: unknown) {
-        const message = error instanceof Error ? error.message : 'Unknown error';
-        console.error(error);
-        toast.error(message);
-        setLoading(false);
+      } else if (formControl instanceof HTMLElement) {
+        formControl.focus();
       }
+
+      return;
+    }
+
+    setFormErrors({});
+    setLoading(true);
+
+    try {
+      const res = await fetch(`/api/acceleration`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!res.ok) {
+        if (res.status === 409) {
+          setFormErrors((currentErrors) => ({
+            ...currentErrors,
+            email: 'An application with this email already exists.',
+          }));
+          toast.error('An application with this email already exists.');
+        } else {
+          toast.error('There was a problem submitting the form.');
+        }
+        return;
+      }
+
+      const data = await res.json();
+
+      if (data.success && data.uuid) {
+        setReferenceNumber(data.uuid);
+        setShowPopup(true);
+        form.reset();
+        setFormErrors({});
+        return;
+      }
+
+      toast.error('Submission failed. Please try again.');
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Unknown error';
+      console.error(error);
+      toast.error(message);
+    } finally {
+      setLoading(false);
     }
   };
+
+  const renderFieldError = (fieldName: string) =>
+    formErrors[fieldName] ? (
+      <p className="mt-1 text-sm text-red-600">{formErrors[fieldName]}</p>
+    ) : null;
 
   return (
     <>
@@ -88,12 +205,39 @@ export default function AccelarationForm() {
                     { id: 'firstName', label: 'First Name' },
                     { id: 'lastName', label: 'Last Name' },
                     { id: 'email', label: 'Your email', type: 'email' },
-                    { id: 'phone', label: 'Phone', type: 'text', placeholder: "XXX-XXX-XXXX" },
-                    { id: 'equityStack', label: 'Equity Stake In %' },
-                    { id: 'linkedInURL', label: 'LinkedIn URL' },
+                    {
+                      id: 'phone',
+                      label: 'Phone',
+                      type: 'tel',
+                      placeholder: '9876543210',
+                      inputMode: 'numeric' as const,
+                      pattern: '\\d{10}',
+                      maxLength: 10,
+                      title: 'Enter a 10-digit phone number.',
+                    },
+                    {
+                      id: 'equityStack',
+                      label: 'Equity Stake In %',
+                      type: 'number',
+                      placeholder: '0 to 100',
+                      min: 0,
+                      max: 100,
+                      step: '0.01',
+                    },
+                    {
+                      id: 'linkedInURL',
+                      label: 'LinkedIn URL',
+                      type: 'url',
+                      placeholder: 'https://www.linkedin.com/in/your-profile',
+                    },
                     { id: 'componyName', label: 'Company Name' },
-                    { id: 'companyWebsite', label: 'Company Website' },
-                  ].map(({ id, label, type = 'text', placeholder = label }) => (
+                    {
+                      id: 'companyWebsite',
+                      label: 'Company Website',
+                      type: 'url',
+                      placeholder: 'https://yourcompany.com',
+                    },
+                  ].map(({ id, label, type = 'text', placeholder = label, ...fieldProps }) => (
                     <div key={id}>
                       <label htmlFor={id} className="block my-2 text-sm font-medium text-black">
                         {label} <span className="text-red-500">*</span>
@@ -104,8 +248,12 @@ export default function AccelarationForm() {
                         id={id}
                         placeholder={placeholder}
                         required
-                        className="border border-black outline-black text-black sm:text-sm rounded-lg block w-full p-2.5 bg-white placeholder-black focus:ring-black focus:border-black"
+                        onChange={handleFieldChange}
+                        aria-invalid={Boolean(formErrors[id])}
+                        className={getFieldClassName(Boolean(formErrors[id]))}
+                        {...fieldProps}
                       />
+                      {renderFieldError(id)}
                     </div>
                   ))}
 
@@ -119,9 +267,12 @@ export default function AccelarationForm() {
                       name="founderName"
                       id="founderName"
                       required
-                      className="border border-black outline-black placeholder-black text-black sm:text-sm rounded-lg block w-full p-2.5 bg-white"
+                      onChange={handleFieldChange}
+                      aria-invalid={Boolean(formErrors.founderName)}
+                      className={getFieldClassName(Boolean(formErrors.founderName))}
                       placeholder="Other founders"
                     />
+                    {renderFieldError('founderName')}
                   </div>
 
                   <div className="flex flex-row items-center mt-3 col-span-2">
@@ -130,12 +281,14 @@ export default function AccelarationForm() {
                       name="terms"
                       type="checkbox"
                       required
+                      onChange={handleFieldChange}
                       className="w-4 h-4 border border-black outline-black text-black rounded"
                     />
                     <label htmlFor="terms" className="ml-3 text-sm font-bold text-black">
                       I have reviewed the program qualifications and requirements.
                     </label>
                   </div>
+                  {renderFieldError('terms') && <div className="col-span-2">{renderFieldError('terms')}</div>}
 
                   <div className="col-span-2">
                     <label htmlFor="productName" className="block my-2 text-sm font-medium text-black">
@@ -146,8 +299,11 @@ export default function AccelarationForm() {
                       name="productName"
                       id="productName"
                       required
-                      className="border border-black outline-black text-black sm:text-sm rounded-lg block w-full p-2.5 bg-white"
+                      onChange={handleFieldChange}
+                      aria-invalid={Boolean(formErrors.productName)}
+                      className={getFieldClassName(Boolean(formErrors.productName))}
                     />
+                    {renderFieldError('productName')}
                   </div>
 
                   <div className="col-span-2">
@@ -159,8 +315,11 @@ export default function AccelarationForm() {
                       name="productDescription"
                       id="productDescription"
                       required
-                      className="border border-black outline-black text-black sm:text-sm rounded-lg block w-full p-2.5 bg-white"
+                      onChange={handleFieldChange}
+                      aria-invalid={Boolean(formErrors.productDescription)}
+                      className={getFieldClassName(Boolean(formErrors.productDescription))}
                     />
+                    {renderFieldError('productDescription')}
                   </div>
 
                   <div className="col-span-2">
@@ -168,11 +327,15 @@ export default function AccelarationForm() {
                       Product Online Demo URL
                     </label>
                     <input
-                      type="text"
+                      type="url"
                       name="productDemoURL"
                       id="productDemoURL"
-                      className="border border-black outline-black text-black sm:text-sm rounded-lg block w-full p-2.5 bg-white"
+                      placeholder="https://demo.example.com"
+                      onChange={handleFieldChange}
+                      aria-invalid={Boolean(formErrors.productDemoURL)}
+                      className={getFieldClassName(Boolean(formErrors.productDemoURL))}
                     />
+                    {renderFieldError('productDemoURL')}
                   </div>
 
                   <div>
@@ -183,13 +346,16 @@ export default function AccelarationForm() {
                       name="employees"
                       id="employees"
                       required
-                      className="border border-black outline-black text-black sm:text-sm rounded-lg block w-full p-2.5 bg-white"
+                      onChange={handleFieldChange}
+                      aria-invalid={Boolean(formErrors.employees)}
+                      className={getFieldClassName(Boolean(formErrors.employees))}
                     >
                       <option value="1-10">1–10</option>
                       <option value="11-50">11–50</option>
                       <option value="51-100">51–100</option>
                       <option value="101+">More than 100</option>
                     </select>
+                    {renderFieldError('employees')}
                   </div>
 
                   <div>
@@ -198,14 +364,28 @@ export default function AccelarationForm() {
                     </label>
                     <div className="flex flex-col gap-2">
                       <label className="flex items-center text-black gap-x-2">
-                        <input type="radio" name="isPrimary" required className="h-4 w-4" />
+                        <input
+                          type="radio"
+                          name="isPrimary"
+                          value="Yes"
+                          required
+                          onChange={handleFieldChange}
+                          className="h-4 w-4"
+                        />
                         Yes
                       </label>
                       <label className="flex items-center text-black gap-x-2">
-                        <input type="radio" name="isPrimary" className="h-4 w-4" />
+                        <input
+                          type="radio"
+                          name="isPrimary"
+                          value="No"
+                          onChange={handleFieldChange}
+                          className="h-4 w-4"
+                        />
                         No
                       </label>
                     </div>
+                    {renderFieldError('isPrimary')}
                   </div>
 
                   <div className="col-span-2 mt-5">
@@ -231,8 +411,11 @@ export default function AccelarationForm() {
                         type="text"
                         name={id}
                         id={id}
-                        className="border border-black outline-black text-black sm:text-sm rounded-lg block w-full p-2.5 bg-white"
+                        onChange={handleFieldChange}
+                        aria-invalid={Boolean(formErrors[id])}
+                        className={getFieldClassName(Boolean(formErrors[id]))}
                       />
+                      {renderFieldError(id)}
                     </div>
                   ))}
 
@@ -242,14 +425,28 @@ export default function AccelarationForm() {
                     </label>
                     <div className="flex flex-col gap-2">
                       <label className="flex items-center text-black gap-x-2">
-                        <input type="radio" name="isPatented" required className="h-4  w-4" />
+                        <input
+                          type="radio"
+                          name="isPatented"
+                          value="Yes"
+                          required
+                          onChange={handleFieldChange}
+                          className="h-4 w-4"
+                        />
                         Yes
                       </label>
                       <label className="flex text-black items-center gap-x-2">
-                        <input type="radio" name="isPatented" className="h-4  w-4" />
+                        <input
+                          type="radio"
+                          name="isPatented"
+                          value="No"
+                          onChange={handleFieldChange}
+                          className="h-4 w-4"
+                        />
                         No
                       </label>
                     </div>
+                    {renderFieldError('isPatented')}
                   </div>
 
                   <div>
@@ -260,7 +457,9 @@ export default function AccelarationForm() {
                       name="sourceOfInformation"
                       id="sourceOfInformation"
                       required
-                      className="border border-black outline-black text-black sm:text-sm rounded-lg block w-full p-2.5 bg-white"
+                      onChange={handleFieldChange}
+                      aria-invalid={Boolean(formErrors.sourceOfInformation)}
+                      className={getFieldClassName(Boolean(formErrors.sourceOfInformation))}
                     >
                       <option value="LinkedIn">LinkedIn</option>
                       <option value="Newspaper">Newspaper</option>
@@ -268,6 +467,7 @@ export default function AccelarationForm() {
                       <option value="Whatsapp">WhatsApp</option>
                       <option value="Facebook">Facebook</option>
                     </select>
+                    {renderFieldError('sourceOfInformation')}
                   </div>
 
                   <div className="col-span-2">
@@ -279,8 +479,11 @@ export default function AccelarationForm() {
                       name="pitchDesk"
                       id="pitchDesk"
                       required
-                      className="border border-black outline-black text-black sm:text-sm rounded-lg block w-full p-2.5 bg-white"
+                      onChange={handleFieldChange}
+                      aria-invalid={Boolean(formErrors.pitchDesk)}
+                      className={getFieldClassName(Boolean(formErrors.pitchDesk))}
                     />
+                    {renderFieldError('pitchDesk')}
                   </div>
                 </div>
 
@@ -293,14 +496,17 @@ export default function AccelarationForm() {
                   <div className="flex items-start mt-2">
                     <input
                       id="terms2"
+                      name="terms2"
                       type="checkbox"
                       required
+                      onChange={handleFieldChange}
                       className="w-4 h-4 border border-black text-black rounded"
                     />
                     <label htmlFor="terms2" className="ml-3 text-black text-sm">
                       I Accept
                     </label>
                   </div>
+                  {renderFieldError('terms2')}
                 </div>
 
                 <button
