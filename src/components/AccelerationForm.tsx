@@ -35,7 +35,7 @@ const validateForm = (formData: FormData): FormErrors => {
   const pitchDeck = formData.get('pitchDesk');
 
   if (phone.length !== 10) {
-    errors.phone = 'Enter a valid 10-digit phone number.';
+    errors.phone = 'Enter a valid 10 digit phone number.';
   }
 
   if (!equityValue || Number.isNaN(equity) || equity < 0 || equity > 100) {
